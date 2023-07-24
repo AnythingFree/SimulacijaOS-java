@@ -1,118 +1,138 @@
 package assembler;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
-public class Asembler_interpreter {
-    private static final String INPUT_FILE_PATH = "program.asm";
-    private static final String OUTPUT_FILE_PATH = "output.txt";
+import interfaces.Asembler_interpreter_i;
 
-   
+//ova klasa mora da prima fajl. Pogledati Test.java klasu odakle ide poziv... i
+// tu u Test klasi pises kako ti se zove fajl tj program.asm kao i naziv output txt datoteke
+public class Asembler_interpreter implements Asembler_interpreter_i {
 
-   
+	private static final String INPUT_FILE_PATH = "program.asm";
+	private static final String OUTPUT_FILE_PATH = "output.txt";
 
-    private static HashMap<String, String> loadInstructionMappings() {
-        // Implementirajte ovu metodu kako biste učitali mapiranja instrukcija iz nekog izvora (txt fajl, hardcoded, itd.)
-        // Ovdje biste trebali mapirati naredbe na binarne kodove.
-        HashMap<String, String> instructionMappings = new HashMap<>();
-        instructionMappings.put("ADD", "0001");
-        instructionMappings.put("SUB", "0010");
-        instructionMappings.put("MOV", "0101");
-        instructionMappings.put("PUSH", "1000");
-        instructionMappings.put("POP", "1001");
-        instructionMappings.put("JMP", "1100");
-        instructionMappings.put("JNZ", "1101");
-        instructionMappings.put("HLT", "1110");
-        return instructionMappings;
-    }
+	// hard codovane funkcije asemblera u binarni kod
+	// MORAS OVDE DA NAPISES ONO IZ "IDEJA.TXT" FAJLA SAMO OSNOVNE TJ PRVIH 6
+	// KAD URADIS DA SE POZIVA OVA KLASA IZ DRUGE KLASE (Asembler.java) BIRSES OVO
+	// STATIC, NIGDJE TI NE TREBA STATIC OVDE U KLASI
+	private static HashMap<String, String> instructionMappings = new HashMap<>() {
+		{
+			put("ADD", "0001");
+			put("SUB", "0010");
+			put("PUSH", "1000");
+			put("POP", "1001");
+			put("HLT", "1110");
+		}
+	};
 
-    private static ArrayList<String> readInputFile() throws IOException {
-        ArrayList<String> instructions = new ArrayList<>();
-        BufferedReader reader = new BufferedReader(new FileReader(INPUT_FILE_PATH));
-        String line;
-        while ((line = reader.readLine()) != null) {
-            instructions.add(line.trim());
-        }
-        reader.close();
-        return instructions;
-    }
+	public Asembler_interpreter() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
 
-  
+	// pomocna klasa - za ovo mozes koristi niz u javi: String[] s = new String[2];
+	// kad zamjenis sa nizom obrisi ovu klasu
+	private static class InstructionPair {
+		private String opcode;
+		private String argument;
 
-    private static ArrayList<InstructionPair> assembleInstructions(ArrayList<String> functionInstructions, HashMap<String, String> instructionMappings) {
-        ArrayList<InstructionPair> binaryCode = new ArrayList<>();
-        for (String instruction : functionInstructions) {
-            String[] parts = instruction.split("\\s+", 2);
-            String opcode = instructionMappings.get(parts[0]);
-            if (opcode != null) {
-                String argument = (parts.length > 1) ? parts[1] : null;
-                binaryCode.add(new InstructionPair(opcode, argument));
-            } else {
-                System.err.println("Nepoznata instrukcija: " + parts[0]);
-            }
-        }
-        return binaryCode;
-    }
+		public InstructionPair(String opcode, String argument) {
+			this.opcode = opcode;
+			this.argument = argument;
+		}
 
-    private static void writeBinaryCodeToFile(ArrayList<InstructionPair> binaryCode) throws IOException {
-        BufferedWriter writer = new BufferedWriter(new FileWriter(OUTPUT_FILE_PATH));
-        for (InstructionPair pair : binaryCode) {
-            writer.write(pair.getOpcode());
-            if (pair.getArgument() != null) {
-                writer.write(" " + pair.getArgument());
-            }
-            writer.newLine();
-        }
-        writer.close();
-    }
+		public String getOpcode() {
+			return opcode;
+		}
 
-   
+		public String getArgument() {
+			return argument;
+		}
+	}
 
-    private static class InstructionPair {
-        private String opcode;
-        private String argument;
+	// ucitati .asm fajl
+	private static ArrayList<String> readInputFile() throws IOException {
+		ArrayList<String> instructions = new ArrayList<>();
+		BufferedReader reader = new BufferedReader(new FileReader(INPUT_FILE_PATH));
+		String line;
+		while ((line = reader.readLine()) != null) {
+			instructions.add(line.trim());
+		}
+		reader.close();
+		return instructions;
+	}
 
-        public InstructionPair(String opcode, String argument) {
-            this.opcode = opcode;
-            this.argument = argument;
-        }
+	// pretvara insptrukcije u binarno
+	private static ArrayList<InstructionPair> assembleInstructions(ArrayList<String> functionInstructions) {
+		ArrayList<InstructionPair> binaryCode = new ArrayList<>();
+		for (String instruction : functionInstructions) {
+			String[] parts = instruction.split(" ", 2); // LEXER funkcija NEK CISTI KOD OD KOMENTARA !!!!!!!!!!!!!!!
+			String opcode = instructionMappings.get(parts[0]);
+			if (opcode != null) {
+				String argument = (parts.length > 1) ? parts[1] : null; // ako insturkcija ima vise od 1 dijela u
+																		// argument ide drugi dio u suprotnom null
+				binaryCode.add(new InstructionPair(opcode, argument)); // dodaje instrukciju i broj (ako ga ima)
+			} else {
+				System.err.println("Nepoznata instrukcija: " + parts[0]);
+			}
+		}
+		return binaryCode;
+	}
 
-        public String getOpcode() {
-            return opcode;
-        }
+	// pise binarni kod u fajl
+	private static void writeBinaryCodeToFile(ArrayList<InstructionPair> binaryCode) throws IOException {
+		BufferedWriter writer = new BufferedWriter(new FileWriter(OUTPUT_FILE_PATH));
+		for (InstructionPair pair : binaryCode) {
+			writer.write(pair.getOpcode());
+			if (pair.getArgument() != null) {
+				writer.write(" " + pair.getArgument());
+			}
+			writer.newLine();
+		}
+		writer.close();
+	}
 
-        public String getArgument() {
-            return argument;
-        }
-    }
-    private static ArrayList<String> extractFunctionInstructions(ArrayList<String> instructions) {
-        ArrayList<String> functionInstructions = new ArrayList<>();
-        for (String line : instructions) {
-            String[] parts = line.split("\\s+", 2);
-            String instruction = parts[0].trim();
-            if (!instruction.isEmpty()) {
-                functionInstructions.add(line.trim());
-            }
-        }
-        return functionInstructions;
-    }
+	public static void main(String[] args) {
+		try {
+			ArrayList<String> instructions = readInputFile(); // cita .asm fajl
 
-    // ... (ostatak koda je nepromijenjen)
+			ArrayList<InstructionPair> binaryCode = assembleInstructions(instructions);
 
-    public static void main(String[] args) {
-        try {
-            ArrayList<String> instructions = readInputFile();
-            ArrayList<String> functionInstructions = extractFunctionInstructions(instructions);
-            HashMap<String, String> instructionMappings = loadInstructionMappings();
+			writeBinaryCodeToFile(binaryCode);
 
-            ArrayList<InstructionPair> binaryCode = assembleInstructions(functionInstructions, instructionMappings);
-            writeBinaryCodeToFile(binaryCode);
-            System.out.println("Asembliranje uspješno završeno. Binarni kod je sačuvan u " + OUTPUT_FILE_PATH);
-        } catch (IOException e) {
-            System.err.println("Greška prilikom obrade datoteka: " + e.getMessage());
-        }
-    }
+			System.out.println("Asembliranje uspješno završeno. Binarni kod je sačuvan u " + OUTPUT_FILE_PATH);
+
+		} catch (IOException e) {
+			System.err.println("Greška prilikom obrade datoteka: " + e.getMessage());
+		}
+	}
+
+	@Override
+	public void read_asm_file(String path_to_file) {
+		// = readInputFile()
+		// ovo je isto sto i readInputFile ali bolji naziv :)
+	}
+
+	@Override
+	public ArrayList<String> lexer() {
+		// filtracija komentara i gluposti
+		return null;
+	}
+
+	@Override
+	public void asemble(String path_to_file, String name_of_new_file) {
+		// read_asm_file()
+		// lexer()
+		// asembleInstructions()
+
+		// writeBinaryCodeToFilen() - mislim da je bolje da se ovo premjesti u Asembler
+		// klasu
+
+	}
 }

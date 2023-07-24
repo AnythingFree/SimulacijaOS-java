@@ -54,7 +54,7 @@ public interface Asembler_interpreter_i {
 	// ASEMBLE
 	// napravi .txt fajl sa masinskim kodom 
 	//
-	// uzima ono sto parser salje i mapira u masinski jezk (BINARNO) i pise u datoteku
+	// uzima ono sto parser salje i mapira u masinski jezk (BINARNO)
 	public void asemble(String path_to_file, String name_of_new_file);
 	
 	

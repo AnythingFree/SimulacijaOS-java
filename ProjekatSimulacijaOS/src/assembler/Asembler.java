@@ -7,11 +7,13 @@ public class Asembler {
 	private CPU a2 = new CPU();
 	
 	public void create_machine_code(String path_to_file, String new_file_name) {
-		// ovde ide kod
+		a1.asemble(path_to_file, new_file_name);
+		// write that code to txt file
 	}
 
 	public void execute_code(String path_to_file) {
-		// ovde ide kod
+		// read machine code
+		// execute code on cpu
 	}
 	
 }
