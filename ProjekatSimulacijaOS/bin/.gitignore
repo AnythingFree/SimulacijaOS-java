@@ -1,5 +1,2 @@
 /assembler/
-/cpu/
-/interfaces/
-/neko_ime.asm
-/simulacije_jer_ih_jos_nemamo/
+/instruction_mappings1.txt
