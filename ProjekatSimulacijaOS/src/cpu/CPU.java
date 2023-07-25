@@ -3,7 +3,7 @@ package cpu;
 import java.util.ArrayList;
 
 import interfaces.CPU_i;
-import simulacije_jer_ih_jos_nemamo.Simulacija_RAMmemorije;
+import memory_management.RAM;
 
 public class CPU implements CPU_i{
 	
@@ -17,11 +17,11 @@ public class CPU implements CPU_i{
 	
 	
 	private void push(int a) {
-		Simulacija_RAMmemorije.niz[stack_pointer++] = a;
+		RAM.niz[stack_pointer++] = a;
 	}
 
 	private int pop() {
-		int a = Simulacija_RAMmemorije.niz[--stack_pointer];
+		int a = RAM.niz[--stack_pointer];
 		return a;
 	}
 

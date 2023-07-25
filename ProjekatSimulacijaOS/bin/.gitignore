@@ -1,2 +1,9 @@
-/assembler/
-/interfaces/
+/kernel/
+/memorry/
+/memory_management/
+/file_system/
+/shell/
+/bios/
+/bios_start_simulacije/
+/cpu/
+/simulacije_jer_ih_jos_nemamo/
