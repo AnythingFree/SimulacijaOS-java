@@ -1,0 +1,11 @@
+ZADATAK step by step:
+1. napraviti asembler interpreter da pretvara .asm datoteke u .txt sa masinskim kodom u njima, 
+treba da bude binarni (ne dekadni) zapis u toj datoteci
+	1.1. ucita datoteku
+	1.2. lexer sve prebaci u arraylist<String>
+	1.3. lexer izbaci sve sto nije nama vazno ostavi samo naredbe i brojeve i nista drugo
+	1.4. brojevi i naredbe sto su ostale u array se mapiraju sa dec i stringa na binarni zapis 
+	i pisu se u novu datoteku. Za naredbe mozes imati hashmapu ili slicno 
+	hard codovano u app ili u nekom txt fajlu sa strane pa da ih ucitas. 
+	A za pretvaranje iz dec u bin brojeve ima java neku biblioteku sig.. istrazi..
+2. napraviti da CPU ucita taj masinski kod i izvrsi ga.
