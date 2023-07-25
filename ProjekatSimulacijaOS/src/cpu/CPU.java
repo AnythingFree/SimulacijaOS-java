@@ -2,7 +2,7 @@ package cpu;
 
 import java.util.ArrayList;
 
-import interfaces.CPU_i;
+import _interfaces.CPU_i;
 import memory_management.RAM;
 
 public class CPU implements CPU_i{
