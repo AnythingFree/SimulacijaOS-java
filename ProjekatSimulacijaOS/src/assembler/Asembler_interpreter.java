@@ -14,8 +14,8 @@ import interfaces.Asembler_interpreter_i;
 // tu u Test klasi pises kako ti se zove fajl tj program.asm kao i naziv output txt datoteke
 public class Asembler_interpreter implements Asembler_interpreter_i {
 
-	private static final String INPUT_FILE_PATH = "program.asm";
-	private static final String OUTPUT_FILE_PATH = "output.txt";
+	private static String INPUT_FILE_PATH = "program.asm";
+	private static String OUTPUT_FILE_PATH = "output.txt";
 
 	// hard codovane funkcije asemblera u binarni kod
 	// MORAS OVDE DA NAPISES ONO IZ "IDEJA.TXT" FAJLA SAMO OSNOVNE TJ PRVIH 6
@@ -56,7 +56,7 @@ public class Asembler_interpreter implements Asembler_interpreter_i {
 		}
 	}
 
-	// ucitati .asm fajl
+	// ucitava .asm fajl
 	private static ArrayList<String> readInputFile() throws IOException {
 		ArrayList<String> instructions = new ArrayList<>();
 		BufferedReader reader = new BufferedReader(new FileReader(INPUT_FILE_PATH));
@@ -71,13 +71,19 @@ public class Asembler_interpreter implements Asembler_interpreter_i {
 	// pretvara insptrukcije u binarno
 	private static ArrayList<InstructionPair> assembleInstructions(ArrayList<String> functionInstructions) {
 		ArrayList<InstructionPair> binaryCode = new ArrayList<>();
+		
 		for (String instruction : functionInstructions) {
-			String[] parts = instruction.split(" ", 2); // LEXER funkcija NEK CISTI KOD OD KOMENTARA !!!!!!!!!!!!!!!
-			String opcode = instructionMappings.get(parts[0]);
+			String[] parts = instruction.split(" ", 3); // LEXER funkcija NEK CISTI KOD OD KOMENTARA
+														// U sklopu ove funkcije cistimo kod od komentara 
+			String opcode = instructionMappings.get(parts[0]); // i ostavljamo samo naredbe i brojeve
+			String binarniArgument="";
 			if (opcode != null) {
 				String argument = (parts.length > 1) ? parts[1] : null; // ako insturkcija ima vise od 1 dijela u
-																		// argument ide drugi dio u suprotnom null
-				binaryCode.add(new InstructionPair(opcode, argument)); // dodaje instrukciju i broj (ako ga ima)
+				if(argument != null) {									// argument ide drugi dio u suprotnom null
+				int argumentBroj=Integer.parseInt(argument);			//uzimamo argument, pretvorimo ga u int
+				 binarniArgument=Integer.toBinaryString(argumentBroj); //da bismo primjenili metodu toBinatyString
+				} 															//i broj koji je uz naredbu pretvaramo u binarni 
+				binaryCode.add(new InstructionPair(opcode, binarniArgument)); // dodaje instrukciju i broj (ako ga ima)
 			} else {
 				System.err.println("Nepoznata instrukcija: " + parts[0]);
 			}
@@ -85,7 +91,7 @@ public class Asembler_interpreter implements Asembler_interpreter_i {
 		return binaryCode;
 	}
 
-	// pise binarni kod u fajl
+	// upisuje binarni kod u fajl .txt
 	private static void writeBinaryCodeToFile(ArrayList<InstructionPair> binaryCode) throws IOException {
 		BufferedWriter writer = new BufferedWriter(new FileWriter(OUTPUT_FILE_PATH));
 		for (InstructionPair pair : binaryCode) {
@@ -113,17 +119,7 @@ public class Asembler_interpreter implements Asembler_interpreter_i {
 		}
 	}
 
-	@Override
-	public void read_asm_file(String path_to_file) {
-		// = readInputFile()
-		// ovo je isto sto i readInputFile ali bolji naziv :)
-	}
 
-	@Override
-	public ArrayList<String> lexer() {
-		// filtracija komentara i gluposti
-		return null;
-	}
 
 	@Override
 	public void asemble(String path_to_file, String name_of_new_file) {
@@ -133,6 +129,25 @@ public class Asembler_interpreter implements Asembler_interpreter_i {
 
 		// writeBinaryCodeToFilen() - mislim da je bolje da se ovo premjesti u Asembler
 		// klasu
-
+		INPUT_FILE_PATH=path_to_file;
+		OUTPUT_FILE_PATH=name_of_new_file;
 	}
+
+	
+	// ovo su funkcije koje smo implementirali, jer ova klasa naslijedjuje klasu Asembler_interpreter_i
+	@Override
+	public void read_asm_file(String path_to_file) {
+		// Funkcija koja je ista kao readInputFile, samo drugaciji naziv
+		
+	}
+
+	@Override
+	public ArrayList<String> lexer() {
+		// Funkcija koja cisti kod od komentara, ali ovdje smo to uradili u sklopu
+		// funkcije assembleInstructions
+		return null;
+	}
+
+	
+	
 }
