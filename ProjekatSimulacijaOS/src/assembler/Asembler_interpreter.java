@@ -75,7 +75,7 @@ public class Asembler_interpreter {
 		return instruction;
 	}
 
-	public ArrayList<String> lexer(ArrayList<String> instructions) {
+	private ArrayList<String> lexer(ArrayList<String> instructions) {
 		ArrayList<String> cleanedInstructions = new ArrayList<>();
 
 		// remove empty lines
