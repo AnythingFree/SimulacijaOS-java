@@ -14,8 +14,8 @@ import interfaces.Asembler_interpreter_i;
 // tu u Test klasi pises kako ti se zove fajl tj program.asm kao i naziv output txt datoteke
 public class Asembler_interpreter implements Asembler_interpreter_i {
 
-	private static String INPUT_FILE_PATH = "program.asm";
-	private static String OUTPUT_FILE_PATH = "output.txt";
+	private static String INPUT_FILE_PATH = "";//"program.asm";
+	private static String OUTPUT_FILE_PATH = "";//"output.txt";
 
 	// hard codovane funkcije asemblera u binarni kod
 	// MORAS OVDE DA NAPISES ONO IZ "IDEJA.TXT" FAJLA SAMO OSNOVNE TJ PRVIH 6
@@ -33,7 +33,10 @@ public class Asembler_interpreter implements Asembler_interpreter_i {
 
 	public Asembler_interpreter() {
 		super();
-		// TODO Auto-generated constructor stub
+	}
+	public Asembler_interpreter(String path_to_file,String name_of_new_file) {
+		this.INPUT_FILE_PATH=path_to_file;
+		this.OUTPUT_FILE_PATH=name_of_new_file;
 	}
 
 	// pomocna klasa - za ovo mozes koristi niz u javi: String[] s = new String[2];
@@ -81,7 +84,7 @@ public class Asembler_interpreter implements Asembler_interpreter_i {
 				String argument = (parts.length > 1) ? parts[1] : null; // ako insturkcija ima vise od 1 dijela u
 				if(argument != null) {									// argument ide drugi dio u suprotnom null
 				int argumentBroj=Integer.parseInt(argument);			//uzimamo argument, pretvorimo ga u int
-				 binarniArgument=Integer.toBinaryString(argumentBroj); //da bismo primjenili metodu toBinatyString
+				binarniArgument=intToBinary(argumentBroj,4); //da bismo primjenili metodu toBinatyString
 				} 															//i broj koji je uz naredbu pretvaramo u binarni 
 				binaryCode.add(new InstructionPair(opcode, binarniArgument)); // dodaje instrukciju i broj (ako ga ima)
 			} else {
@@ -89,6 +92,14 @@ public class Asembler_interpreter implements Asembler_interpreter_i {
 			}
 		}
 		return binaryCode;
+	}
+	//funkcija kojom pravimo 4 cifre u izlaznoj datoteci
+	private static String intToBinary(int number, int desiredDigits) {
+		String binaryString = Integer.toBinaryString(number);
+        int leadingZeros = Math.max(desiredDigits - binaryString.length(), 0);
+        return String.format("%04d", Integer.parseInt(binaryString)); 
+        //koristimo format "%04d" unutar String.format() kako bismo osigurali da
+        //binarni zapis ima četiri cifre i da se nule dodaju ispred ako je potrebno
 	}
 
 	// upisuje binarni kod u fajl .txt
@@ -129,9 +140,22 @@ public class Asembler_interpreter implements Asembler_interpreter_i {
 
 		// writeBinaryCodeToFilen() - mislim da je bolje da se ovo premjesti u Asembler
 		// klasu
-		INPUT_FILE_PATH=path_to_file;
-		OUTPUT_FILE_PATH=name_of_new_file;
-	}
+		Asembler_interpreter a=new Asembler_interpreter(path_to_file,name_of_new_file);
+		
+		//System.out.println();
+		try {
+			ArrayList<String> instructions = readInputFile(); // cita .asm fajl
+
+			ArrayList<InstructionPair> binaryCode = assembleInstructions(instructions);
+
+			writeBinaryCodeToFile(binaryCode);
+
+			System.out.println("Asembliranje uspješno završeno. Binarni kod je sačuvan u " + OUTPUT_FILE_PATH);
+
+		} catch (IOException e) {
+			System.err.println("Greška prilikom obrade datoteka: " + e.getMessage());
+		}
+	} 
 
 	
 	// ovo su funkcije koje smo implementirali, jer ova klasa naslijedjuje klasu Asembler_interpreter_i

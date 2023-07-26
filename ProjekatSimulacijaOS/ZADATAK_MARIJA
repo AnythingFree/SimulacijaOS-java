@@ -1,7 +1,7 @@
 output.txt treba biti:
 1000 0001
 1000 0010
-0001
+0001          // 1 je binarno 1 a 2 je binarno 10, jel moze da se to ispise ili mora ovako
 ----> i brojevi 1 i 2 trebaju postati binarni
 
 ====================
