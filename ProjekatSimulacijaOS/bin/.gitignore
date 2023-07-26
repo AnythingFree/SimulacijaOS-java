@@ -1,10 +1,9 @@
+/HDD/
+/_interfaces/
 /assembler/
 /bios_start_simulacije/
 /cpu/
-/interfaces/
-/kernel/
-/shell/
-/memory_management/
 /file_system/
-/HDD/
-/_interfaces/
+/kernel/
+/memory_management/
+/shell/
