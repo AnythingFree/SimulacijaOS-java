@@ -8,7 +8,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import interfaces.Asembler_interpreter_i;
+import _interfaces.Asembler_interpreter_i;
 
 //ova klasa mora da prima fajl. Pogledati Test.java klasu odakle ide poziv... i
 // tu u Test klasi pises kako ti se zove fajl tj program.asm kao i naziv output txt datoteke

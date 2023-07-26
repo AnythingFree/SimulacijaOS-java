@@ -1,4 +1,10 @@
 /assembler/
-/interfaces/
+/bios_start_simulacije/
 /cpu/
-/simulacije_jer_ih_jos_nemamo/
+/interfaces/
+/kernel/
+/shell/
+/memory_management/
+/file_system/
+/HDD/
+/_interfaces/
