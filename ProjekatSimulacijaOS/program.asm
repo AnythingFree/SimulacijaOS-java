@@ -1,3 +1,5 @@
-PUSH 3 ;komentar
-PUSH 2 
+PUSH   3 ;komentar
+PUSH 1 
+;kom
+
 ADD

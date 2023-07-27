@@ -21,9 +21,11 @@ hlt 0000 0
 add 0001 1
 sub 0010 2
 mul 0011 3
-dec 0100 4
+div 0100 4
 inc 0101 5
-div 0110 6
+dec 0110 6
+push 0111 7
+pop 1000 8
 ===ako stignemo (necemo za pocetak sa labelama)=====
 mov [labela] ??
 cmp 0111 7
