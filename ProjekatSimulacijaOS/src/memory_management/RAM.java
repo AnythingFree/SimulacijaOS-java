@@ -7,5 +7,8 @@ public class RAM {
 	public static void print_status() {
 		System.out.println(niz);
 	}
+	 public static void printMemory() {
+			// prikazuju se informacije o zauzecu RAM memorije na racunaru 
+		}
 
 }

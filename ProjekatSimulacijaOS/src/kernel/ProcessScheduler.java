@@ -13,7 +13,11 @@ public class ProcessScheduler {
 		
 	}
 	
+	public static void printProcesses() {
+	// kreirati logiku za ispisivanje procesa i osnovnih podataka o njima
+	}
 	
-	
-	
+    public static void runProcess() {
+		//kreirati logiku za pokretanje procesa 
+	}
 }
