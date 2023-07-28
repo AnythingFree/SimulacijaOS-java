@@ -14,24 +14,20 @@ public interface CPU_i {
 	//=============================================================================== 
 	// treba da ucita masinski kod u RAM memoriju i obavlja sta treba i ispisuje u RAM memoriju
 	//
-	public void execute_code(ArrayList<Integer> kodovi_binarni);
+	public void execute_code(ArrayList<String> kodovi_binarni);
 	// 
 	//
 	//==================NAREDBE===one pricaju sa RAMom==================================================
 	//
-	abstract void execute_instruction(int naredba, int a, int b);
-	// switch (naredba)
-	// 		case add...
-	//		case sub...
-	
+
 	// na neki nacin ce da utice na memoriju
 	abstract void hlt(); // zavrsava program
-	abstract void add(int a, int b);
-	abstract void sub(int a, int b);
-	abstract void mul(int a, int b);
-	abstract void div(int a, int b);
-	abstract void dec(int a);
-	abstract void inc(int a);
+	abstract void sub();
+	abstract void add();
+	abstract void mul();
+	abstract void div();
+	abstract void dec();
+	abstract void inc();
 	//=================================================================
 	abstract void increment_instr_point();	// treba da zna koliko koja naredba zauzima memorije tako da samo poveca za 2 adrese ili jednu adresu
 }
