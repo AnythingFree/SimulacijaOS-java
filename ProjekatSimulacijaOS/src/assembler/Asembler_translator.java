@@ -10,7 +10,7 @@ import java.util.HashMap;
 
 import _interfaces.Asembler_interpreter_i;
 
-public class Asembler_interpreter {
+public class Asembler_translator {
 
 	@SuppressWarnings("serial")
 	private HashMap<String, String> instructionMappings = new HashMap<>() {

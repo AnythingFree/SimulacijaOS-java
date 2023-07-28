@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import cpu.CPU;
 
 public class Asembler {
-	private Asembler_interpreter a1 = new Asembler_interpreter();
+	private Asembler_translator a1 = new Asembler_translator();
 	private CPU a2 = new CPU();
 
 	protected void create_machine_code(String path_to_file, String OUTPUT_FILE_PATH) {
