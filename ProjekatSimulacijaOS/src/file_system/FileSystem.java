@@ -1,6 +1,13 @@
 package file_system;
 
+import java.io.File;
+
 public class FileSystem {
+
+	public FileSystem(File file) {
+		// konstruktor sa ulaznim parametrom File, sto predstavlja direktorijum
+		//nazvati direktorijum po zelji, u ovom slucaju sam napisala PROGRAMS
+	}
 
 	public static void listFiles() {
 		// kreirati logiku za prelazak u ciljni direktorijum
