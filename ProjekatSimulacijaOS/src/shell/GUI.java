@@ -65,28 +65,7 @@ public class GUI extends Application {
 		bottom=new TextField();
 		bottom.setPrefSize(900,70);
 		
-		/*bottom.setOnAction(e -> {
-			
-			try {
-				
-				byte array[]=bottom.getText().getBytes();
-				output.write(array);
-				length1=array.length;
-				
-				Shell.readCommand(input, length1);
-				
-				textToShow=textToShow + ">" +bottom.getText()+"\n";
-				top.appendText(textToShow);
-				Shell.getCommand();
-				
-				bottom.clear();
-				textToShow="";
-				
-				
-			}catch(IOException e1) {
-				e1.printStackTrace();
-			}
-		});*/
+		
 		bottom.setOnAction(e1 -> {
 			try {
 				
@@ -155,18 +134,5 @@ public class GUI extends Application {
 		Shell.booting();
 		launch(args);
 	}
-	 /*public static void main(String[] args) {
-	        System.out.println("Dobrodošli u CLI! Unesite naredbu ili 'exit' za izlaz.");
 
-	        Scanner scanner = new Scanner(System.in);
-	        String command;
-
-	        do {
-	            System.out.print("> ");
-	            command = scanner.nextLine();
-	            Shell.processCommand(command);
-	        } while (!command.equalsIgnoreCase("exit"));
-
-	        scanner.close();
-	    }*/
 }

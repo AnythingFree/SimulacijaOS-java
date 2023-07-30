@@ -1,6 +1,9 @@
 package assembler;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -8,7 +11,7 @@ import java.util.ArrayList;
 import cpu.CPU;
 
 public class Asembler {
-	private Asembler_interpreter a1 = new Asembler_interpreter();
+	private Asembler_translator a1 = new Asembler_translator();
 	private CPU a2 = new CPU();
 
 	protected void create_machine_code(String path_to_file, String OUTPUT_FILE_PATH) {
@@ -28,7 +31,17 @@ public class Asembler {
 
 	protected void execute_code(String path_to_file) {
 		// read machine code
+		ArrayList<String> binaryCode = null;
+		try {
+			binaryCode = readBinaryCodeFromFile(path_to_file);
+		} catch (FileNotFoundException e) {
+			System.err.println("Datoteka " + path_to_file + " nije pronađena.");
+		} catch (IOException e) {
+			System.err.println("Greška prilikom obrade datoteka: " + e.getMessage());
+		}
+
 		// execute code on cpu
+		a2.execute_code(binaryCode);
 	}
 
 	// ====================================
@@ -40,6 +53,18 @@ public class Asembler {
 			writer.write(piece + " ");
 		}
 		writer.close();
+	}
+
+	// cita binarni kod iz fajla
+	private ArrayList<String> readBinaryCodeFromFile(String path_to_file) throws IOException {
+		ArrayList<String> binaryCode = new ArrayList<String>();
+		
+		BufferedReader reader = new BufferedReader(new FileReader(path_to_file));
+		for (String line : reader.readLine().split(" ")) {
+			binaryCode.add(line);
+		}
+		return binaryCode;
+
 	}
 
 }
