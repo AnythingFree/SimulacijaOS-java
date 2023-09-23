@@ -1,1 +1,12 @@
-/.metadata/
+# Ignore .env files
+.env
+
+# Ignore compiled Java class files
+*.class
+
+# Ignore log files
+*.log
+
+# Ignore setings json
+.vscode/settings.json
+.vscode/launch.json

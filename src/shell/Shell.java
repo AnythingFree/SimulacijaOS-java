@@ -32,7 +32,7 @@ public class Shell {
             	//out="da";
             	out="Izvrsena naredba: prelazi u ciljni direktorijum";
                 // prelazak u ciljni direktorijum
-                FileSystem.changeDirectory();
+                //FileSystem.changeDirectory();
                 break;
             case "dir":
             	 //System.out.println("Izvrsena naredba: ispisuje sadržaj trenutnog direktorijuma");
