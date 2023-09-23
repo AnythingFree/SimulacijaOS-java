@@ -12,6 +12,7 @@ import javafx.geometry.Pos;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
@@ -22,8 +23,6 @@ public class GUI extends Application {
 	private static String textToShow;
 	private static TextArea top=new TextArea();
 	private static TextField bottom=new TextField();
-	private static Button light;
-	private static Button dark;
 	private PipedInputStream input=new PipedInputStream();
 	private PipedOutputStream output=new PipedOutputStream();
 	private StringBuilder outSB=new StringBuilder();
@@ -45,22 +44,12 @@ public class GUI extends Application {
 	public void start(Stage primaryStage) throws Exception {
 		input.connect(output);
 		textToShow="";
-
-		light=new Button("Light");
-		light.setPrefSize(60, 5);
 		
-		dark=new Button("Dark");
-		dark.setPrefSize(60, 5);
-		
-		HBox buttons=new HBox(5);
-		buttons.setAlignment(Pos.TOP_RIGHT);
-		
-		buttons.getChildren().addAll(light,dark);
 		
 		top=new TextArea();
-		top.setPrefSize(900,500);
+		top.setPrefSize(900,400);
 		top.setEditable(false);
-		top.setText("Dobrodošli u CLI! Unesite naredbu ili 'exit' za izlaz.\n Unesite 'help' ukoliko zelite listu naredbi.");
+		top.setText("Dobrodošli u CLI! Unesite naredbu ili 'exit' za izlaz.\nUnesite 'help' ukoliko zelite listu naredbi.\n");
 		
 		bottom=new TextField();
 		bottom.setPrefSize(900,70);
@@ -108,23 +97,12 @@ public class GUI extends Application {
 		
 		VBox root =new VBox(15);
 		root.setPadding(new Insets(10,30,30,30));
-		root.getChildren().addAll(buttons,top,bottom);
+		root.getChildren().addAll(top,bottom);
 		VBox.setVgrow(top, Priority.ALWAYS);
 		Scene scena=new Scene(root,1200,650);
 		
 		scena.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 
-		light.setOnAction(e -> {
-			scena.getStylesheets().clear();
-			scena.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
-		}
-		);
-		
-		dark.setOnAction(e -> {
-			scena.getStylesheets().clear();
-			scena.getStylesheets().add(getClass().getResource("change.css").toExternalForm());
-		}
-		);
 		
 		primaryStage.setScene(scena);
 		primaryStage.show();

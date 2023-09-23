@@ -37,67 +37,69 @@ public class Shell {
             case "dir":
             	 //System.out.println("Izvrsena naredba: ispisuje sadržaj trenutnog direktorijuma");
                 out="Izvrsena naredba: ispisuje sadržaj trenutnog direktorijuma";
-            	 // prelazak u ciljni direktorijum
+            	 // ispis trenutnog direktorijuma
             	FileSystem.listFiles();
             	break;
             case "ls":
                 //System.out.println("Izvrsena naredba: ispisuje sadržaj trenutnog direktorijuma");
                 // ispis trenutnog direktorijuma
-            	out="Izvrsena naredba: ispisuje sadržaj trenutnog direktorijuma";
+            	out="Izvrsena naredba: ispisuje sadržaj trenutnog direktorijuma.\n";
                 FileSystem.listFiles();
                 break;
             case "ps":
                 //System.out.println("Izvrsena naredba: ispisuje popis aktivnih procesa na računaru");
-                out="Izvrsena naredba: ispisuje popis aktivnih procesa na računaru";
+                out="Izvrsena naredba: ispisuje popis aktivnih procesa na računaru.\n";
             	// ispis procesa i osnovnih informacija o njima
                 ProcessScheduler.printProcesses();
                 break;
             case "mkdir":
                 //System.out.println("Izvrsena naredba: pravi novi direktorijum u trenutnom radnom direktorijumu");
-                out="Izvrsena naredba: pravi novi direktorijum u trenutnom radnom direktorijumu";
+                out="Izvrsena naredba: pravi novi direktorijum u trenutnom radnom direktorijumu.\n";
                 // stvaranje direktorija
 
                 if (s.length == 2) {
     				String name_of_new_directory = s[1];
     				FileSystem.makeDirectory(name_of_new_directory);
+    				System.out.println("Napravljen direktorijum: "+name_of_new_directory);
     			}
     			else
     				//System.out.println("Unesite korektne parametre!");
-    				out="Unesite korektne parametre!";
+    				out="Unesite korektne parametre!\n";
                 break;
             case "run":
                 //System.out.println("Izvrsena naredba: pokreće određeni proces ili aplikaciju");
-                out="Izvrsena naredba: pokreće određeni proces ili aplikaciju";
+                out="Izvrsena naredba: pokreće određeni proces ili aplikaciju.\n";
                 // Pokretanje procesa
                 ProcessScheduler.runProcess();
                 break;
             case "mem":
                 //System.out.println("Izvrsena naredba: prikazuje informacije o zauzeću RAM memorije na računaru");
-                out="Izvrsena naredba: prikazuje informacije o zauzeću RAM memorije na računaru";
+                out="Izvrsena naredba: prikazuje informacije o zauzeću RAM memorije na računaru.\n";
             	// ispis zauzeća RAM memorije
                 RAM.printMemory();
                 break;
             case "exit":
                 //System.out.println("Izvrsena naredba: zatvara CLI, zaustavljajući izvršavanje programa.");
-                out="Izvrsena naredba: zatvara CLI, zaustavljajući izvršavanje programa.";
+                out="Izvrsena naredba: zatvara CLI, zaustavljajući izvršavanje programa.\n";
             	// izlazak iz CLI
                 System.exit(1);
                 break;
             case "rm":
             	//System.out.println("Izvrsena naredba:  uklanja datoteku ili direktorijum");
-            	out="Izvrsena naredba:  uklanja datoteku ili direktorijum";
+            	out="Izvrsena naredba:  uklanja datoteku ili direktorijum.\n";
             	//uklanjanje datoteke ili direktorijuma
             	if (s.length == 2) {
     				String name_of_file = s[1];
     				FileSystem.deleteFile(name_of_file);
+    				System.out.println("Izbrisana datoteka ili direktorijum: "+name_of_file);
     			}
     			else
     				//System.out.println("Unesite korektne parametre!");
-    				out="Unesite korekte parametre!";
+    				out="Unesite korekte parametre!\n";
             	break;
             case "help":
         				String help = "";
-        				help += "CD" + "\t\t\t\t" + "Naredba: prelazi u ciljni direktorijum.\n";
+        				help +="Lista naredbi:\n"+ "CD" + "\t\t\t\t" + "Naredba: prelazi u ciljni direktorijum.\n";
         				help += "DIR (LS)" + "\t\t\t" + "Naredba: ispisuje sadržaj trenutnog direktorijuma.\n";
         				help += "MKDIR" + "\t\t\t" + "Naredba: pravi novi direktorijum u trenutnom radnom direktorijumu.\n";
         				help += "MEM" + "\t\t\t" + "Naredba: prikazuje informacije o zauzeću RAM memorije na računaru.\n";
