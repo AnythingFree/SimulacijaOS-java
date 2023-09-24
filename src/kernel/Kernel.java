@@ -36,6 +36,22 @@ public class Kernel {
 		ProcessScheduler.createProcess(startEndAdress[0], startEndAdress[1]);
 	}
 
+	public static void changeDirectory() {
+		//prelazi u ciljni direktorijum
+
+		
+	}
+
+    public static void listFiles() {
+	
+    }
+
+    public static void makeDirectory(String name_of_new_directory) {
+    }
+
+    public static void deleteFile(String name_of_file) {
+    }
+
 	// RAM ram = new RAM();
 	// Disk disk = new Disc();
 	// CPU cpu = new CPU();
