@@ -1,1 +1,1 @@
-# InspectorGPT
+# SimulacijaOS-java
