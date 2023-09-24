@@ -8,9 +8,9 @@ import java.io.PipedInputStream;
 import java.io.PrintStream;
 
 import file_system.FileSystem;
+import hardware_modules.RAM;
 import kernel.Kernel;
 import kernel.ProcessScheduler;
-import memory_management.RAM;
 public class Shell {
 	Kernel kernel;
 	private static String c;
@@ -70,7 +70,7 @@ public class Shell {
                 //System.out.println("Izvrsena naredba: pokreće određeni proces ili aplikaciju");
                 out="Izvrsena naredba: pokreće određeni proces ili aplikaciju.\n";
                 // Pokretanje procesa
-                ProcessScheduler.runProcess();
+                ProcessScheduler.runProcesses();
                 break;
             case "mem":
                 //System.out.println("Izvrsena naredba: prikazuje informacije o zauzeću RAM memorije na računaru");

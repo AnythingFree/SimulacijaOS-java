@@ -8,7 +8,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import cpu.CPU;
+import hardware_modules.CPU;
 
 public class Asembler {
 	private Asembler_translator a1 = new Asembler_translator();
@@ -41,7 +41,7 @@ public class Asembler {
 		}
 
 		// execute code on cpu
-		a2.execute_code(binaryCode);
+		a2.executeCode(binaryCode);
 	}
 
 	// ====================================
