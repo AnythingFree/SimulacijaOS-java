@@ -30,7 +30,7 @@ public class FileSystemTree {
             this.name = name;
             this.type = type;
             this.children = new ArrayList<>();
-            // this.metadata = new _Metadata( bla bla bla);
+            // this.metadata = new _Metadata( bla bla bla); TO DO MARIJA
         }
 
         public String getName() {
