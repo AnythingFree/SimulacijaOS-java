@@ -10,6 +10,9 @@ import hardware_modules.HDD;
 import hardware_modules.RAM;
 import memory_management.RamManager;
 
+// shell poziva kernelove funkcije
+// shell: cd ls ps mkdir run mem exit rm
+
 // Kernel is the core part of an operating system which manages
 // system resources. It also acts like a bridge between
 // application and hardware of the computer
@@ -37,5 +40,8 @@ public class Kernel {
 	// Disk disk = new Disc();
 	// CPU cpu = new CPU();
 	// FileTree fileTree = new FileTree();
+
+	//======== TO DO MARIJA =========
+	// SHELL KOMANDE cd ls ps mkdir run mem exit rm
 
 }
