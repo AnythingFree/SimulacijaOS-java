@@ -109,14 +109,12 @@ public class FileSystemTree {
 
     // vraca TreeNode tog imena ako postoji, ako ne null
     public TreeNode getChildByName(TreeNode currentDirectory, String directoryName) {
-        if (currentDirectory.getChildren().size() == 0) {
-            return null;
-        }else if (currentDirectory.getChildren().size() == 1) {
-            if (currentDirectory.getChildren().get(0).getName().equals(directoryName)) {
-                return currentDirectory.getChildren().get(0);
-            }else {
-                return null;
+        for (TreeNode child : currentDirectory.getChildren()) {
+            if (child.getName().equals(directoryName)) {
+                return child;
             }
+        }
+        return null;
     }
 
     // vraca sve imena fajlova i dir-ova iz trenutnog dir-a
@@ -133,17 +131,12 @@ public class FileSystemTree {
     // treba mi da bi oslobodila hdd od podataka
     // a ti obrisi ovde iz drveta
     public TreeNode deleteNode(TreeNode currentNode, String nameOfNode) {
-        
-        if (currentNode.getChildren().size() == 0) {
-            return null;
-        }else if (currentNode.getChildren().size() == 1) {
-            if (currentNode.getChildren().get(0).getName().equals(nameOfNode)) {
-                TreeNode node = currentNode.getChildren().get(0);
-                currentNode.getChildren().remove(0);
-                return node;
-            }else {
-                return null;
-            }
+
+        TreeNode node = getChildByName(currentNode, nameOfNode);
+        if (node != null) {
+            currentNode.getChildren().remove(node);
+        }
+        return node;
     }
 
     // full path se dobije: /dir1/dir2/dir3 gdje je dir3 novi dir
@@ -164,10 +157,10 @@ public class FileSystemTree {
                 currentNode = node;
             }
         }
-        return true;
+        return currentNode.equals(this.root);
     }
 
-    public boolean createFile(String path, int indexBlockID) {
-        return false;
-    }
+    
+    
+
 }
