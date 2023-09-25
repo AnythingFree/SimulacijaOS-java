@@ -109,25 +109,62 @@ public class FileSystemTree {
 
     // vraca TreeNode tog imena ako postoji, ako ne null
     public TreeNode getChildByName(TreeNode currentDirectory, String directoryName) {
-        return null;
+        if (currentDirectory.getChildren().size() == 0) {
+            return null;
+        }else if (currentDirectory.getChildren().size() == 1) {
+            if (currentDirectory.getChildren().get(0).getName().equals(directoryName)) {
+                return currentDirectory.getChildren().get(0);
+            }else {
+                return null;
+            }
     }
 
     // vraca sve imena fajlova i dir-ova iz trenutnog dir-a
     public String[] getNameChildrenNodes(TreeNode directory) {
-        return null;
+        
+        String[] names = new String[directory.getChildren().size()];
+        for (int i = 0; i < directory.getChildren().size(); i++) {
+            names[i] = directory.getChildren().get(i).getName();
+        }
+        return names;
     }
 
     // vraca TreeNode tog imena ako postoji, ako ne null
     // treba mi da bi oslobodila hdd od podataka
     // a ti obrisi ovde iz drveta
     public TreeNode deleteNode(TreeNode currentNode, String nameOfNode) {
-        return null;
+        
+        if (currentNode.getChildren().size() == 0) {
+            return null;
+        }else if (currentNode.getChildren().size() == 1) {
+            if (currentNode.getChildren().get(0).getName().equals(nameOfNode)) {
+                TreeNode node = currentNode.getChildren().get(0);
+                currentNode.getChildren().remove(0);
+                return node;
+            }else {
+                return null;
+            }
     }
 
     // full path se dobije: /dir1/dir2/dir3 gdje je dir3 novi dir
     // ako uspije vraca true, ako ne false
     public boolean makeDirectory(String path) {
-        return false;
+        String[] names = path.split("/");
+        TreeNode currentNode = this.root;
+        for (String name : names) {
+            if (name.equals("")) {
+                continue;
+            }
+            TreeNode node = getChildByName(currentNode, name);
+            if (node == null) {
+                TreeNode newNode = new TreeNode(name, NodeType.DIRECTORY);
+                currentNode.addChild(newNode);
+                currentNode = newNode;
+            }else {
+                currentNode = node;
+            }
+        }
+        return true;
     }
 
     public boolean createFile(String path, int indexBlockID) {
