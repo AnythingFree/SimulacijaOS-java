@@ -130,4 +130,7 @@ public class FileSystemTree {
         return false;
     }
 
+    public boolean createFile(String path, int indexBlockID) {
+        return false;
+    }
 }
