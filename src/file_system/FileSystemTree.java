@@ -30,7 +30,7 @@ public class FileSystemTree {
             this.name = name;
             this.type = type;
             this.children = new ArrayList<>();
-            // this.metadata = new _Metadata( bla bla bla);
+            // this.metadata = new _Metadata( bla bla bla); TO DO MARIJA
         }
 
         public String getName() {
@@ -126,7 +126,11 @@ public class FileSystemTree {
 
     // full path se dobije: /dir1/dir2/dir3 gdje je dir3 novi dir
     // ako uspije vraca true, ako ne false
-    public boolean makeDirectory(String path) {
+    public boolean createDirectory(String path) {
+        return false;
+    }
+
+    public boolean createFile(String path, int indexBlockID) {
         return false;
     }
 

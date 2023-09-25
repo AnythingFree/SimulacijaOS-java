@@ -27,6 +27,7 @@ public class Kernel {
 		ProcessScheduler.startCleanUpThread();
 	}
 
+	// ovo treba da bude tred ili slicno ("run komanda vraca kontrolu korisniku")
 	public void createProcess(String path) {
 		// load binary file from file
 		ArrayList<String> binary = HDD.getBinary(path);

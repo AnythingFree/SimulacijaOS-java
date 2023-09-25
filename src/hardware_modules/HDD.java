@@ -4,10 +4,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class HDD {
-    private int totalSectors = 20;
+    // 2 sectors is 1 block = 1024 bytes is 1 block
+
+    private int totalSectors = 40; // 40 sectors = 20 blocks
     byte[][] sectors = new byte[totalSectors][512];
 
-    public void initializeHDD() {
+    public HDD() {
         for (int i = 0; i < totalSectors; i++) {
             for (int j = 0; j < 512; j++) {
                 sectors[i][j] = 0;
@@ -39,6 +41,14 @@ public class HDD {
 
     public static ArrayList<String> getBinary(String path) {
         return null;
+    }
+
+    public int getSize() {
+        return totalSectors;
+    }
+
+    public static int getSectorSize() {
+        return 512;
     }
 
 }
