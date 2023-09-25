@@ -1,15 +1,19 @@
 package file_system;
 
+import java.util.ArrayList;
+
 import hardware_modules.HDD;
 
 public class Block {
     final int id;
-    final int[] pointers;
+    final ArrayList<int[]> pointers;
     boolean occupied;
 
-    public Block(int i) {
-        this.id = i;
-        this.pointers = new int[] { i, i + 1 };
+    public Block(int id, int trackN, int sectorN) {
+        this.id = id;
+        this.pointers = new ArrayList<int[]>();
+        this.pointers.add(new int[] { trackN, sectorN });
+        this.pointers.add(new int[] { trackN, sectorN + 1 });
         this.occupied = false;
     }
 
@@ -29,38 +33,29 @@ public class Block {
         return 2 * HDD.getSectorSize();
     }
 
-    public void write(byte[] bs, HDD hdd) {
-        int sectorNumber = this.pointers[0];
-        if (bs.length > HDD.getSectorSize()) {
+    // ovo moze sa manje koda
+    public void sendRequest(byte[] bs, HDD hdd) {
+        this.occupied = true;
+
+        int trackNumber = this.pointers.get(0)[0];
+        int sectorNumber = this.pointers.get(0)[1];
+        if (bs != null && bs.length > HDD.getSectorSize()) {
 
             // chunk it
             byte[] firstSector = new byte[HDD.getSectorSize()];
             System.arraycopy(bs, 0, firstSector, 0, HDD.getSectorSize());
-            hdd.writeData(sectorNumber, firstSector);
+            hdd.addRequest(trackNumber, sectorNumber, firstSector);
 
-            sectorNumber = this.pointers[1];
+            trackNumber = this.pointers.get(1)[0];
+            sectorNumber = this.pointers.get(1)[1];
             byte[] secondSector = new byte[HDD.getSectorSize()];
             System.arraycopy(bs, HDD.getSectorSize(), secondSector, 0, bs.length - HDD.getSectorSize());
-            hdd.writeData(sectorNumber, secondSector);
+            hdd.addRequest(trackNumber, sectorNumber, secondSector);
 
         } else {
-            hdd.writeData(sectorNumber, bs);
+            hdd.addRequest(trackNumber, sectorNumber, bs);
         }
 
-        this.occupied = true;
-
-    }
-
-    public byte[] read(HDD hdd) {
-        // read from hdd
-        byte[] firstSector = hdd.readData(this.pointers[0]);
-        byte[] secondSector = hdd.readData(this.pointers[1]);
-
-        byte[] result = new byte[firstSector.length + secondSector.length];
-
-        System.arraycopy(firstSector, 0, result, 0, firstSector.length);
-        System.arraycopy(secondSector, 0, result, firstSector.length, secondSector.length);
-        return result;
     }
 
 }

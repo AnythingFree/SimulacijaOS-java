@@ -21,31 +21,51 @@ public class FileSystem {
 		this.fileSystemTree = new FileSystemTree();
 		this.currentDirectory = fileSystemTree.getRoot();
 
-		for (int i = 0; i < hdd.getSize(); i = i + 2) {
-			blocks.add(new Block(i));
+		int id = 0;
+		for (int j = 0; j < HDD.getTotalNumberOfTracks(); j++) {
+			for (int i = 0; i < HDD.getTotalNumberOfSectorsOnTrack(); i = i + 2) {
+				blocks.add(new Block(id, j, i));
+				id++;
+			}
 		}
 
-		this.freeBlocks = getFreeBlocks();
+		Block indexBlock = blocks.get(0);
+		blocks.remove(0);
+		makeIndexBlockInHDD(indexBlock, blocks);
+
+		this.freeBlocks = blocks;
+		// updateFreeBlocksInHDD();
 	}
 
 	// ================== READ/WRITE FUNC ========================
+	
+
+	// ===================== PRIVATE =============================
 
 	// split it into blocks sizes and write to blocks
-	public void writeData(ArrayList<Block> blocksAllocated, byte[][] data) {
-		for (int i = 1; i < data.length; i++) {
-			blocksAllocated.get(i).write(data[i], this.hdd);
+	private void sendRequests(ArrayList<Block> blocks, byte[][] data) {
+		for (int i = 0; i < blocks.size(); i++) {
+			blocks.get(i).sendRequest(data[i], this.hdd);
 		}
+
 	}
 
-	public byte[] readData(int blockID) {
-		if (blockID >= 0 && blockID < this.blocks.size()) {
-			byte[] data = this.blocks.get(blockID).read(hdd);
-			// obrisi 0 ili -1 ili idi do znaka za kraj TO DO
-			return data;
-		} else {
-			System.err.println("Invalid block number. readData");
-			return null;
+	private void writeData(ArrayList<Block> blocksAllocated, byte[][] data) {
+		sendRequests(blocksAllocated, data);
+		this.hdd.write();
+	}
+
+	private byte[] readData(ArrayList<Block> blocks) {
+		sendRequests(blocks, new byte[0][]);
+
+		// turn ArrayList<byte[]> into byte[]
+		ArrayList<byte[]> data = this.hdd.read();
+		byte[] dataByte = new byte[data.size() * HDD.getSectorSize()];
+		for (int i = 0; i < data.size(); i++) {
+			System.arraycopy(data.get(i), 0, dataByte, i * HDD.getSectorSize(), HDD.getSectorSize());
 		}
+
+		return dataByte;
 	}
 
 	// ===========================================================
@@ -67,19 +87,21 @@ public class FileSystem {
 
 	public void deleteFile(TreeNode node) {
 		// int dataPointer = node.getMetadata().getDataPointer(); TO DO
-		int dataPointer = 0;
+		int indexBlockPointer = 0;
 
 		// oslobodi iz hdd-a podatke
-		Block indexBlock = this.blocks.get(dataPointer);
-		byte[] data = indexBlock.read(hdd);
+		Block indexBlock = this.blocks.get(indexBlockPointer);
+		ArrayList<Block> b = new ArrayList<>();
+		b.add(indexBlock);
+		byte[] data = readData(b);
 
 		for (int i = 0; i < data.length; i++) {
 			if (data[i] == -1) {
 				break;
 			}
-			Block b = this.blocks.get(data[i]);
-			b.setOccupied(false);
-			this.freeBlocks.add(b);
+			Block bl = this.blocks.get(data[i]);
+			bl.setOccupied(false);
+			this.freeBlocks.add(bl);
 		}
 		indexBlock.setOccupied(false);
 		this.freeBlocks.add(indexBlock);
@@ -90,10 +112,14 @@ public class FileSystem {
 
 		byte[][] dataInBlockSizes = getDataInBlockSizes(data.getBytes());
 		ArrayList<Block> blocksAllocated = allocateBloks(fileName, dataInBlockSizes.length);
-		int indexBlockID = makeIndexBlock(blocksAllocated);
+		Block indexBlock = blocksAllocated.get(0);
+		blocksAllocated.remove(0);
+		makeIndexBlockInHDD(indexBlock, blocksAllocated);
+
 		writeData(blocksAllocated, dataInBlockSizes);
 
 		// add to tree
+		int indexBlockID = indexBlock.getId();
 		return this.fileSystemTree.createFile(path, indexBlockID);
 	};
 
@@ -132,20 +158,7 @@ public class FileSystem {
 	}
 
 	// ====================
-	// ucitava sa hdd sve free blokove
-	ArrayList<Block> getFreeBlocks() {
-		ArrayList<Block> freeBlocks = new ArrayList<Block>();
-		byte[] data = this.blocks.get(this.freeBlocksIndex).read(hdd);
-
-		// jedan bajt je jedan blokID tj adresa. -1 je kraj niza
-		for (int i = 0; i < this.blocks.size(); i++) {
-			if (data[i] == -1) {
-				return freeBlocks;
-			}
-			freeBlocks.add(this.blocks.get(data[i]));
-		}
-		return freeBlocks;
-	}
+	// ===================== pomocne ================
 
 	// pise u hdd sve free blokove tj njihove ids
 	void writeFreeBlocks(ArrayList<Block> freeBlocks) {
@@ -158,20 +171,24 @@ public class FileSystem {
 		for (int i = 0; i < data.size(); i++) {
 			dataToWrite[i] = data.get(i).byteValue(); // bice isto msms
 		}
-		this.blocks.get(this.freeBlocksIndex).write(dataToWrite, hdd);
+
+		// this.blocks.get(this.freeBlocksIndex) to arrayList
+		ArrayList<Block> bl = new ArrayList<Block>();
+		bl.add(this.blocks.get(this.freeBlocksIndex));
+
+		byte[][] dataInBlockSizes = getDataInBlockSizes(dataToWrite);
+		writeData(bl, dataInBlockSizes);
 	}
-	// ===================== pomocne ================
 
-	private int makeIndexBlock(ArrayList<Block> blocks) {
-		Block indexBlock = blocks.get(0);
-		byte[] dataToWrite = new byte[blocks.size() - 1];
+	private void makeIndexBlockInHDD(Block indexBlock, ArrayList<Block> blocks) {
+		byte[][] dataToWrite = new byte[0][blocks.size()];
 		// array to byte
-		for (int i = 0; i < blocks.size() - 1; i++) {
-			dataToWrite[i] = (byte) blocks.get(i + 1).getId(); // bice isto msms
+		for (int i = 0; i < blocks.size(); i++) {
+			dataToWrite[0][i] = (byte) blocks.get(i).getId(); // bice isto msms
 		}
-		indexBlock.write(dataToWrite, hdd);
-
-		return indexBlock.getId();
+		ArrayList<Block> b = new ArrayList<Block>();
+		b.add(indexBlock);
+		writeData(b, dataToWrite);
 	}
 
 	private byte[][] getDataInBlockSizes(byte[] data) {
