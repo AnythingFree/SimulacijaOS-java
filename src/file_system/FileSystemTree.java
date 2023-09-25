@@ -119,7 +119,7 @@ public class FileSystemTree {
 
     // vraca sve imena fajlova i dir-ova iz trenutnog dir-a
     public String[] getNameChildrenNodes(TreeNode directory) {
-        
+
         String[] names = new String[directory.getChildren().size()];
         for (int i = 0; i < directory.getChildren().size(); i++) {
             names[i] = directory.getChildren().get(i).getName();
@@ -153,14 +153,20 @@ public class FileSystemTree {
                 TreeNode newNode = new TreeNode(name, NodeType.DIRECTORY);
                 currentNode.addChild(newNode);
                 currentNode = newNode;
-            }else {
+            } else {
                 currentNode = node;
             }
         }
         return currentNode.equals(this.root);
+
     }
 
-    
-    
+    public boolean createDirectory(String path) {
+        return false;
+    }
+
+    public boolean createFile(String path, int indexBlockID) {
+        return false;
+    }
 
 }

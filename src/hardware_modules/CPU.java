@@ -6,6 +6,7 @@ import java.util.HashMap;
 import kernel._ProcessControlBlock;
 
 // https://www.google.com/search?client=firefox-b-d&q=Zero-Address+Assembly+Language
+// BRZINA PROCESORA TREBA DA BUDE PARAMETAR
 public class CPU {
 
 	// hard codovali smo stek memoriju ali moze i dinamicki da se mijenja

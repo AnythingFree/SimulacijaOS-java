@@ -27,13 +27,14 @@ public class Kernel {
 		ProcessScheduler.startCleanUpThread();
 	}
 
+	// ovo treba da bude tred ili slicno ("run komanda vraca kontrolu korisniku")
 	public void createProcess(String path) {
 		// load binary file from file
-		ArrayList<String> binary = HDD.getBinary(path);
-		int[] startEndAdress = RAM.loadBinary(binary);
+		// ArrayList<String> binary = HDD.getBinary(path);
+		//int[] startEndAdress = RAM.loadBinary(binary);
 
 		// create process
-		ProcessScheduler.createProcess(startEndAdress[0], startEndAdress[1]);
+		// ProcessScheduler.createProcess(startEndAdress[0], startEndAdress[1]);
 	}
 
 	public static void changeDirectory() {
