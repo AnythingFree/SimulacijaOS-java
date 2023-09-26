@@ -47,7 +47,7 @@ public class Shell {
 			// ========================================================================
 			case "rm":
 				if (s.length == 2 && kernel.deleteFileORDir(s[1]))
-					out = "Izvrsena naredba:  uklanja datoteku ili direktorijum (naziv ili path).\n";
+					out = "Izvrsena naredba:  uklanja datoteku ili direktorijum iz trenutnog dir.\n";
 				else
 					out = "Ime nije valjano. Datoteka ili direktorijum nije uklonjen.\n";
 				break;

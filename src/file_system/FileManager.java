@@ -17,16 +17,16 @@ public class FileManager {
         Shell.output = fs.listFiles();
     }
 
-    public void changeCurrentDirectory(String nameORpath) throws Exception {
-        this.fs.changeCurrentDirectory(nameORpath);
-    }
-
     public void makeDirectory(String nameOfNewDir) throws Exception {
         this.fs.createDirectoryInCurrentDir(nameOfNewDir);
     }
 
-    public void deleteFileORDir(String nameOrPath) throws Exception {
-        this.fs.delete(nameOrPath); // ovo brise samo ako je u current dir
+    public void changeCurrentDirectory(String nameORpath) throws Exception {
+        this.fs.changeCurrentDirectory(nameORpath);
+    }
+
+    public void deleteFileORDir(String name) throws Exception {
+        this.fs.delete(name);
     }
 
     public String getCurrentDir() {

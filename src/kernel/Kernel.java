@@ -65,9 +65,9 @@ public class Kernel {
 		return true;
 	}
 
-	public boolean deleteFileORDir(String nameORpath) {
+	public boolean deleteFileORDir(String name) {
 		try {
-			fileManager.deleteFileORDir(nameORpath);
+			fileManager.deleteFileORDir(name);
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 			return false;
