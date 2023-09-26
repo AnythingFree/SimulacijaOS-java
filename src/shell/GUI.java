@@ -110,7 +110,7 @@ public class GUI extends Application {
 		bottom.requestFocus();
 	}
 	public static void main(String []args) {
-		Shell.booting();
+		//Shell.booting();
 		launch(args);
 	}
 

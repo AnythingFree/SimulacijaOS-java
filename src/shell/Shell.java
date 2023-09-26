@@ -1,17 +1,39 @@
 package shell;
 
+import java.io.File;
+import java.io.IOException;
+
+import java.io.OutputStream;
+import java.io.PipedInputStream;
+import java.io.PrintStream;
+
+import file_system.FileSystem;
 import hardware_modules.RAM;
 import kernel.Kernel;
 import process.ProcessScheduler;
 
 public class Shell {
-	private Kernel kernel;
+	private static Kernel kernel;
 	public static String output = "";
 	public static String c = "";
 
 	public Shell(Kernel k) {
 		this.kernel = k;
 	}
+	 
+	
+	//funkcija za citanje komande
+	public static void readCommand(PipedInputStream input, int length) {
+		c = "";
+		char ch;
+		for (int i = 0; i < length; i++) {
+			try {
+				ch = (char) input.read();
+				c += ch;
+			} catch (IOException e) {
+				e.printStackTrace();
+				System.out.println("Grečka prilikom čitanja komande!");
+			}
 
 	public String processCommand(String komanda) {
 		String c = komanda;
@@ -37,6 +59,7 @@ public class Shell {
 				else
 					out = "Nepostojeci direktorijum\n";
 				break;
+			// ========================================================================
 			case "rm":
 				if (s.length == 2 && kernel.deleteFileORDir(s[1]))
 					out = "Izvrsena naredba:  uklanja datoteku ili direktorijum iz trenutnog dir.\n";
@@ -89,14 +112,17 @@ public class Shell {
 		return out;
 	}
 
+	public static void setOut(OutputStream output) {
+		System.setOut(new PrintStream(output, true));
+	}
+
 	public String getOutput() {
 		String ret = Shell.output;
-		ret += getCurrentDir() + ">>>";
 		Shell.output = "";
 		return ret;
 	}
 
-	private String getCurrentDir() {
+	public String getCurrentDir() {
 		return kernel.getCurrentDir();
 	}
 
