@@ -5,7 +5,10 @@ import java.io.File;
 import javafx.scene.control.TreeItem;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+
+import file_system._Metadata.FPermission;
 
 public class FileSystemTree {
     private TreeNode root;
@@ -61,10 +64,14 @@ public class FileSystemTree {
 
         public String getPath() {
             if (this.parent == null) {
-                return this.name;
+                return "";
             } else {
                 return this.parent.getPath() + "/" + this.name;
             }
+        }
+
+        public _Metadata getMetadata() {
+            return this.metadata;
         }
     }
 
@@ -127,46 +134,72 @@ public class FileSystemTree {
         return names;
     }
 
-    // vraca TreeNode tog imena ako postoji, ako ne null
-    // treba mi da bi oslobodila hdd od podataka
-    // a ti obrisi ovde iz drveta
-    public TreeNode deleteNode(TreeNode currentNode, String nameOfNode) {
-
-        TreeNode node = getChildByName(currentNode, nameOfNode);
-        if (node != null) {
-            currentNode.getChildren().remove(node);
-        }
-        return node;
+    public void deleteNode(TreeNode currentNode, TreeNode nodeToDelete) {
+        currentNode.getChildren().remove(nodeToDelete);
     }
 
-    // full path se dobije: /dir1/dir2/dir3 gdje je dir3 novi dir
-    // ako uspije vraca true, ako ne false
-    public boolean makeDirectory(String path) {
+    // ovo mozda nece trebati ne znam
+    public void createDirectory(String path) throws Exception {
         String[] names = path.split("/");
         TreeNode currentNode = this.root;
+        TreeNode node = null;
         for (String name : names) {
             if (name.equals("")) {
                 continue;
             }
-            TreeNode node = getChildByName(currentNode, name);
-            if (node == null) {
-                TreeNode newNode = new TreeNode(name, NodeType.DIRECTORY);
-                currentNode.addChild(newNode);
-                currentNode = newNode;
+            node = getChildByName(currentNode, name);
+            if (names[names.length - 1].equals(name)) {
+                if (node == null) {
+                    TreeNode newNode = new TreeNode(name, NodeType.DIRECTORY);
+                    currentNode.addChild(newNode);
+                } else {
+                    throw new Exception("Directory already exists");
+                }
+                return;
+            } else if (node == null) {
+                throw new Exception("Direcotry in path does not exist");
+            } else {
+                currentNode = node;
+            }
+
+        }
+
+    }
+
+    public void createFile(TreeNode currentDirectory, String name, int indexBlockID, int size, FPermission permision) {
+        TreeNode newNode = new TreeNode(name, NodeType.FILE);
+        String path = currentDirectory.getPath() + "/" + name;
+        newNode.metadata = new _Metadata(path, size, new Date(), permision, indexBlockID);
+        currentDirectory.addChild(newNode);
+    }
+
+    public TreeNode getByPath(String path) throws Exception {
+        String[] names = path.split("/");
+        TreeNode currentNode = this.root;
+        TreeNode node = null;
+        for (String name : names) {
+            if (name.equals("")) {
+                continue;
+            }
+            node = getChildByName(currentNode, name);
+            if (names[names.length - 1].equals(name)) {
+                if (node == null) {
+                    throw new Exception("Directory does not exists");
+                } else {
+                    return node;
+                }
+            } else if (node == null) {
+                throw new Exception("Direcotry in path does not exist");
             } else {
                 currentNode = node;
             }
         }
-        return currentNode.equals(this.root);
-
+        throw new Exception("Direcotry does not exist");
     }
 
-    public boolean createDirectory(String path) {
-        return false;
-    }
-
-    public boolean createFile(String path, int indexBlockID) {
-        return false;
+    public void createDirectoryInDir(String directoryName, TreeNode currentDirectory) {
+        TreeNode newNode = new TreeNode(directoryName, NodeType.DIRECTORY);
+        currentDirectory.addChild(newNode);
     }
 
 }

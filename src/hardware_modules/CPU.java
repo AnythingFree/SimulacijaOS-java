@@ -3,7 +3,7 @@ package hardware_modules;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import kernel._ProcessControlBlock;
+import process._ProcessControlBlock;
 
 // https://www.google.com/search?client=firefox-b-d&q=Zero-Address+Assembly+Language
 // BRZINA PROCESORA TREBA DA BUDE PARAMETAR

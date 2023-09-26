@@ -6,12 +6,12 @@ import hardware_modules.HDD;
 
 public class Block {
     final int id;
-    final ArrayList<int[]> pointers;
+    final ArrayList<int[]> pointers = new ArrayList<int[]>();
     boolean occupied;
+    private int ocupSize = 0;
 
     public Block(int id, int trackN, int sectorN) {
         this.id = id;
-        this.pointers = new ArrayList<int[]>();
         this.pointers.add(new int[] { trackN, sectorN });
         this.pointers.add(new int[] { trackN, sectorN + 1 });
         this.occupied = false;
@@ -27,6 +27,17 @@ public class Block {
 
     public void setOccupied(boolean occupied) {
         this.occupied = occupied;
+        if (!occupied) {
+            this.ocupSize = 0;
+        }
+    }
+
+    private void setOcuSize(int length) {
+        this.ocupSize = length;
+    }
+
+    public int getOccupSize() {
+        return ocupSize;
     }
 
     public static int getBlockSize() {
@@ -35,7 +46,10 @@ public class Block {
 
     // ovo moze sa manje koda
     public void sendRequest(byte[] bs, HDD hdd) {
-        this.occupied = true;
+        if (bs != null) {
+            setOcuSize(bs.length);
+            setOccupied(true);
+        }
 
         int trackNumber = this.pointers.get(0)[0];
         int sectorNumber = this.pointers.get(0)[1];

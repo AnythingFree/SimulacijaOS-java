@@ -1,14 +1,20 @@
-package kernel;
+package process;
 
 import java.util.ArrayList;
 import java.util.PriorityQueue;
+
+import hardware_modules.CPU;
+import hardware_modules.RAM;
 
 public class ProcessScheduler {
 	static PriorityQueue<Process> processQueue = new PriorityQueue<>();
 	static ArrayList<Process> processList = new ArrayList<>();
 	static ArrayList<Integer> idlist = new ArrayList<>();
 
-	public static void runProcesses() {
+	public ProcessScheduler(CPU cpu, RAM ram) {
+    }
+
+    public static void runProcesses() {
 		while (!processQueue.isEmpty()) {
 			Process currentProcess = processQueue.poll();
 			currentProcess.start();

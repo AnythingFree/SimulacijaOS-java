@@ -3,6 +3,7 @@ package hardware_modules;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 
 // sector (512 bytes) -> track (40 sectors) -> cylinder (1 track) -> plate (5 cylinders)
@@ -21,6 +22,7 @@ public class HDD {
     private boolean read;
     private ArrayList<byte[]> dataToReturn = new ArrayList<byte[]>();
     private int[] headPosition = new int[] { 0, 0 };
+    private HashMap<DiskRequest, byte[]> mapa = new HashMap<DiskRequest, byte[]>();
 
     // pomocna klasa
     private class DiskRequest implements Comparable<DiskRequest> {
@@ -76,9 +78,9 @@ public class HDD {
     // ============ PRIVATE ================
     private void writeDataToSector(int trackNumber, int sectorNumber, byte[] data) {
         if (sectorNumber >= 0 && sectorNumber < totalSectorsOnTrack) {
-            if (data.length < 512) {
+            if (data.length <= 512) {
                 listOfTracks.get(trackNumber)[sectorNumber] = Arrays.copyOf(data, data.length);
-                System.out.println("Data written to sector " + sectorNumber);
+                System.out.println("Data written to track: " + trackNumber + ", sector: " + sectorNumber);
             } else {
                 System.err.println("Data must be 512 bytes in length. writeData");
             }
@@ -101,14 +103,15 @@ public class HDD {
         // when you reach end of tracksList go to the beginning of the tracksList and
         // serve
 
-        Collections.sort(this.listOfRequests);
+        ArrayList<DiskRequest> listOfRequests2 = new ArrayList<DiskRequest>(this.listOfRequests);
+        Collections.sort(listOfRequests2);
 
         // Split requests into two lists: those ahead of the initial position and those
         // behind it
         List<DiskRequest> ahead = new ArrayList<>();
         List<DiskRequest> behind = new ArrayList<>();
         DiskRequest initialPosition = new DiskRequest(this.headPosition[0], this.headPosition[1], null);
-        for (DiskRequest request : this.listOfRequests) {
+        for (DiskRequest request : listOfRequests2) {
             if (request.compareTo(initialPosition) >= 0) {
                 ahead.add(request);
             } else {
@@ -128,9 +131,8 @@ public class HDD {
 
     private void serve(DiskRequest request) {
         setHeadPosition(request);
-        if (this.read) { // ako se ova oznaka (read) prenese u dataRequest klasu onda mozes slati mix
-                         // raed and write requests
-            this.dataToReturn.add(readDataFromSector(request.getTrackNumber(), request.getSectorNumber()));
+        if (this.read) {
+            this.mapa.put(request, readDataFromSector(request.getTrackNumber(), request.getSectorNumber()));
         } else {
             writeDataToSector(request.getTrackNumber(), request.getSectorNumber(), request.getData());
         }
@@ -147,10 +149,15 @@ public class HDD {
         this.listOfRequests.add(new DiskRequest(trackNumber, sectorNumber, data));
     }
 
+    // treba namjestiti da kad procita nekako osrtira da ide redom..
     public ArrayList<byte[]> read() {
         this.read = true;
+        this.mapa.clear();
         this.dataToReturn.clear();
         CSCAN();
+        for (DiskRequest request : this.listOfRequests) {
+            this.dataToReturn.add(this.mapa.get(request));
+        }
         this.listOfRequests.clear();
         return this.dataToReturn;
     }
