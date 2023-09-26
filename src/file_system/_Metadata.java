@@ -1,6 +1,5 @@
 package file_system;
 
-import java.io.FilePermission;
 import java.util.Date;
 
 public class _Metadata {
@@ -8,10 +7,29 @@ public class _Metadata {
     private int size;
     private Date dateCreated;
     private FPermission permission;
-    private int dataBlockPointer;
+    private int indexBlockPointer;
 
-    enum FPermission {
-        READ, WRITE, EXECUTE
+    public _Metadata(String path, int size, Date dateCreated, FPermission permission, int indexBlockPointer) {
+        this.path = path;
+        this.size = size;
+        this.dateCreated = dateCreated;
+        this.permission = permission;
+        this.indexBlockPointer = indexBlockPointer;
+    }
+
+    public enum FPermission {
+        READ, WRITE, EXECUTE,
+        READ_WRITE, READ_EXECUTE,
+        WRITE_EXECUTE, READ_WRITE_EXECUTE
+
+    }
+
+    public int getIndexBlockPointer() {
+        return indexBlockPointer;
+    }
+
+    public FPermission getPermision() {
+        return permission;
     }
 
 }
