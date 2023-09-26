@@ -1,0 +1,18 @@
+/* styles.css */
+.submit-button {
+    -fx-background-color: #4CAF50; /* Zelena boja */
+    -fx-text-fill: white; /* Beli tekst */
+}
+
+.submit-button:hover {
+    -fx-background-color: #45a049; /* Tamnija zelena boja kad je hover */
+}
+
+.clear-button {
+    -fx-background-color: #f44336; /* Crvena boja */
+    -fx-text-fill: white; /* Beli tekst */
+}
+
+.clear-button:hover {
+    -fx-background-color: #d32f2f; /* Tamnija crvena boja kad je hover */
+}
