@@ -17,7 +17,7 @@ public class Bootloader {
 
 		// input from user
 		Scanner sc = new Scanner(System.in);
-		System.out.print(shell.getCurrentDir() + ">>>");
+		System.out.print(">>>");
 		String input = sc.nextLine();
 		String shOut;
 		while (input != "x") {
@@ -25,11 +25,10 @@ public class Bootloader {
 				System.out.print(shell.processCommand(input));
 				shOut = shell.getOutput();
 				if (shOut != "")
-					System.out.println(shOut);
+					System.out.print(shOut);
 			} else {
 				System.err.println("Command not recognized.");
 			}
-			System.out.print(shell.getCurrentDir() + ">>>");
 			input = sc.nextLine();
 		}
 	}

@@ -14,7 +14,7 @@ public class FileManager {
     }
 
     public void listFiles() {
-        Shell.output = fs.listFiles();
+        Shell.output = fs.listFiles() + "\n";
     }
 
     public void makeDirectory(String nameOfNewDir) throws Exception {

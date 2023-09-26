@@ -1,14 +1,10 @@
 package file_system;
 
-<<<<<<< HEAD
-import java.io.File;
-=======
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
->>>>>>> 3d08ad523dd92c8034ef579ae98d4d2628e2a55e
 
 import file_system.FileSystemTree.NodeType;
 import file_system.FileSystemTree.TreeNode;
@@ -50,17 +46,11 @@ public class FileSystem {
 		loadASMFiles();
 	}
 
-
 	public FileSystem(File file) {
-		this.fileSystemTree=new FileSystemTree();
+		this.fileSystemTree = new FileSystemTree();
 		this.currentDirectory = fileSystemTree.getRoot();
-    }
-
-    public void delete(String name) {
-		TreeNode node = this.fileSystemTree.deleteNode(this.currentDirectory, name);
-		if (node.getType() == NodeType.FILE)
-			deleteFile(node);
 	}
+
 	private void loadASMFiles() {
 		String path = "src//assembler//FILES"; // Replace with the correct path
 
