@@ -35,8 +35,8 @@ public class FileSystem {
 			}
 		}
 
-		this.freeBlocksIndex = blocks.get(0);
-		blocks.remove(0);
+		this.freeBlocksIndex = blocks.get(7);
+		blocks.remove(7);
 
 		makeIndexBlockInHDD(this.freeBlocksIndex, blocks);
 
@@ -70,7 +70,7 @@ public class FileSystem {
 				}
 				FPermission per = FPermission.READ_WRITE_EXECUTE;
 				createFile(file.getName(), data, per);
-				System.out.println("File " + file.getName() + " loaded.");
+				System.err.println("File " + file.getName() + " loaded.\n");
 			}
 		} else {
 			System.err.println("The specified path is not a directory.");
@@ -173,7 +173,7 @@ public class FileSystem {
 
 		indexBlock.setOccupied(false);
 		this.freeBlocks.add(indexBlock);
-		writeFreeBlocks();
+		writeFreeBlocksToDisk();
 	}
 
 	public void createFile(String fileName, String data, FPermission per) {
@@ -232,7 +232,7 @@ public class FileSystem {
 	// ===================== pomocne ================
 
 	// pise u hdd sve free blokove tj njihove ids
-	void writeFreeBlocks() {
+	void writeFreeBlocksToDisk() {
 		ArrayList<Integer> data = new ArrayList<>();
 		for (Block b : freeBlocks) {
 			data.add(b.getId());
@@ -248,11 +248,12 @@ public class FileSystem {
 		bl.add(this.freeBlocksIndex);
 
 		byte[][] dataInBlockSizes = getDataInBlockSizes(dataToWrite);
+		// sendRequests(bl, dataInBlockSizes);
 		writeData(bl, dataInBlockSizes);
 	}
 
 	private void makeIndexBlockInHDD(Block indexBlock, ArrayList<Block> blocks) {
-		System.out.print("indexBlock: ");
+		System.out.println("indexBlock: " + indexBlock.getId());
 		byte[][] dataToWrite = new byte[1][blocks.size()];
 		// array to byte
 		for (int i = 0; i < blocks.size(); i++) {
@@ -260,7 +261,8 @@ public class FileSystem {
 		}
 		ArrayList<Block> b = new ArrayList<Block>();
 		b.add(indexBlock);
-		writeData(b, dataToWrite);
+		sendRequests(b, dataToWrite);
+		// writeData(b, dataToWrite);
 	}
 
 	private byte[][] getDataInBlockSizes(byte[] data) {
@@ -304,7 +306,7 @@ public class FileSystem {
 		blocksAllocated.add(this.freeBlocks.get(0));
 		this.freeBlocks.remove(0);
 
-		writeFreeBlocks();
+		writeFreeBlocksToDisk();
 		return blocksAllocated;
 	}
 

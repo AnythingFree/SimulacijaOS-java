@@ -1,13 +1,8 @@
 package shell;
 
-import java.io.File;
-import java.io.IOException;
-
 import java.io.OutputStream;
-import java.io.PipedInputStream;
 import java.io.PrintStream;
 
-import file_system.FileSystem;
 import hardware_modules.RAM;
 import kernel.Kernel;
 import process.ProcessScheduler;
@@ -44,7 +39,6 @@ public class Shell {
 				else
 					out = "Nepostojeci direktorijum\n";
 				break;
-			// ========================================================================
 			case "rm":
 				if (s.length == 2 && kernel.deleteFileORDir(s[1]))
 					out = "Izvrsena naredba:  uklanja datoteku ili direktorijum iz trenutnog dir.\n";
