@@ -5,7 +5,7 @@ import kernel.Kernel;
 import process.ProcessScheduler;
 
 public class Shell {
-	private static Kernel kernel;
+	private Kernel kernel;
 	public static String output = "";
 	public static String c = "";
 
