@@ -1,5 +1,7 @@
 package file_system;
 
+import java.io.File;
+
 import file_system.FileSystemTree.NodeType;
 import file_system.FileSystemTree.TreeNode;
 import hardware_modules.HDD;
@@ -16,7 +18,12 @@ public class FileSystem {
 		this.currentDirectory = fileSystemTree.getRoot();
 	}
 
-	public void delete(String name) {
+	public FileSystem(File file) {
+		this.fileSystemTree=new FileSystemTree();
+		this.currentDirectory = fileSystemTree.getRoot();
+    }
+
+    public void delete(String name) {
 		TreeNode node = this.fileSystemTree.deleteNode(this.currentDirectory, name);
 		if (node.getType() == NodeType.FILE)
 			deleteFile(node);

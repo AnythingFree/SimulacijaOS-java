@@ -28,6 +28,7 @@ public class GUI extends Application {
 	private StringBuilder outSB=new StringBuilder();
 	private OutputStream outputStream;
 	private int length1=0;
+	private TextArea outputArea;
 	
 	public static void clear() {
 		top.setText("");

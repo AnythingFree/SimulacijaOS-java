@@ -33,18 +33,19 @@ public class Shell {
             	out="Izvrsena naredba: prelazi u ciljni direktorijum";
                 // prelazak u ciljni direktorijum
                 //FileSystem.changeDirectory();
+				Kernel.changeDirectory();
                 break;
             case "dir":
             	 //System.out.println("Izvrsena naredba: ispisuje sadržaj trenutnog direktorijuma");
                 out="Izvrsena naredba: ispisuje sadržaj trenutnog direktorijuma";
             	 // ispis trenutnog direktorijuma
-            	FileSystem.listFiles();
+            	Kernel.listFiles();
             	break;
             case "ls":
                 //System.out.println("Izvrsena naredba: ispisuje sadržaj trenutnog direktorijuma");
                 // ispis trenutnog direktorijuma
             	out="Izvrsena naredba: ispisuje sadržaj trenutnog direktorijuma.\n";
-                FileSystem.listFiles();
+                Kernel.listFiles();
                 break;
             case "ps":
                 //System.out.println("Izvrsena naredba: ispisuje popis aktivnih procesa na računaru");
@@ -59,7 +60,7 @@ public class Shell {
 
                 if (s.length == 2) {
     				String name_of_new_directory = s[1];
-    				FileSystem.makeDirectory(name_of_new_directory);
+    				Kernel.makeDirectory(name_of_new_directory);
     				System.out.println("Napravljen direktorijum: "+name_of_new_directory);
     			}
     			else
@@ -90,7 +91,7 @@ public class Shell {
             	//uklanjanje datoteke ili direktorijuma
             	if (s.length == 2) {
     				String name_of_file = s[1];
-    				FileSystem.deleteFile(name_of_file);
+    				Kernel.deleteFile(name_of_file);
     				System.out.println("Izbrisana datoteka ili direktorijum: "+name_of_file);
     			}
     			else
