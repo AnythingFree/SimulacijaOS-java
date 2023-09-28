@@ -38,15 +38,21 @@ public class Partition implements Comparable<Partition> {
     }
 
     public byte readFromRam(int address) {
-        return ram.read(address);
+        synchronized (ram) {
+            return ram.read(address);
+        }
     }
 
     public void writeToStack(int pointer, byte data) {
-        ram.write(pointer, data);
+        synchronized (ram) {
+            ram.write(pointer, data);
+        }
     }
 
     public void writeToOutput(int outPointer, byte a) {
-        ram.write(outPointer, a);
+        synchronized (ram) {
+            ram.write(outPointer, a);
+        }
     }
 
     public int getStartAddress() {

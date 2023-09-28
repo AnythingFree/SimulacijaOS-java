@@ -66,7 +66,6 @@ public class GUI2 extends Application {
                 if (output != "") {
                     textArea.appendText(output + "\n");
                 }
-
             } else {
                 textArea.appendText("Command not recognized.\n");
             }

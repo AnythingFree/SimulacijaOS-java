@@ -51,10 +51,4 @@ public class RAM {
 		return this.size;
 	}
 
-	public void setFree(int startAddress, int endAddress) {
-		for (int i = startAddress; i < endAddress; i++) {
-			memory[i] = 0;
-		}
-	}
-
 }
