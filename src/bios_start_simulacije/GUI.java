@@ -5,7 +5,6 @@ import shell.Shell;
 import java.io.OutputStream;
 import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
-import java.io.PrintStream;
 import java.util.Scanner;
 
 import javafx.application.Application;
@@ -71,27 +70,11 @@ public class GUI extends Application {
         submitButton.setOnAction(e -> {
 			try {
 
-				/*byte array[] = inputField.getText().getBytes();
-				output.write(array);
-				length1 = array.length;
-
-				readCommand(input, length1);
-				System.out.println(inputField.getText());
-				String s = shell.processCommand(inputField.getText());
-
-				//textToShow = textToShow + ">>>" + inputField.getText() + "\n" + ">>>" + s + "\n";
-				outputArea.appendText(textToShow + ">>>" + inputField.getText() + "\n" + ">>>" + s + "\n");
-		
-
-				inputField.clear();
-				textToShow = "";*/
-
-
 				byte array[] = inputField.getText().getBytes();
 				output.write(array);
 				length1 = array.length;
 		
-				// Ako je ovo važno za vaš kod, sada možete čitati komandu iz inputField-a
+				
 				String komanda = inputField.getText();
 				
 				// Procesuirajte komandu koristeći shell objekt
@@ -142,34 +125,6 @@ public class GUI extends Application {
 		inputField.requestFocus();
 
 
-
-		
-		/*bottom = new TextField();
-		bottom.setPrefSize(900, 70);
-
-		bottom.setOnAction(e1 -> {
-			try {
-
-				byte array[] = bottom.getText().getBytes();
-				output.write(array);
-				length1 = array.length;
-
-				readCommand(input, length1);
-				System.out.println(bottom.getText());
-				String s = shell.processCommand(bottom.getText());
-
-				textToShow = textToShow + ">" + bottom.getText() + "\n" + ">" + s + "\n";
-				top.appendText(textToShow);
-				
-
-				bottom.clear();
-				textToShow = "";
-
-			} catch (IOException e2) {
-				e2.printStackTrace();
-			}
-		});*/
-
 		outputStream = new OutputStream() {
 
 			@Override
@@ -182,19 +137,12 @@ public class GUI extends Application {
 			}
 
 		};
-		System.setOut(new PrintStream(outputStream, true));
 
-		/*VBox root = new VBox(15);
-		root.setPadding(new Insets(10, 30, 30, 30));
-		root.getChildren().addAll(top, bottom);
-		VBox.setVgrow(top, Priority.ALWAYS);
-		Scene scena = new Scene(root, 1200, 650);*/
+		//shell.setOut(outputStream);
+
 
 		scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 
-		/*primaryStage.setScene(scene);
-		primaryStage.show();
-		bottom.requestFocus();*/
 	}
 
 	// funkcija za citanje komande
@@ -214,7 +162,6 @@ public class GUI extends Application {
 
 	public static void main(String[] args) {
 		GUI.shell = Bootloader.boot();
-		System.out.println("Shell initialized.");
 		launch(args);
 	}
 

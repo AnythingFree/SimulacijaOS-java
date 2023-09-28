@@ -110,7 +110,7 @@ public class FileSystemTree {
     }
 
     // ====================
-    // TO DO Marija
+    // TO DO funkcije za obradu zahtjeva
 
     // vraca TreeNode tog imena ako postoji, ako ne null
     public TreeNode getChildByName(TreeNode currentDirectory, String directoryName) {
@@ -137,7 +137,7 @@ public class FileSystemTree {
         parent.getChildren().remove(nodeToDelete);
     }
 
-    // ovo mozda nece trebati ne znam
+    // kreiranje direktorija na datoj putanji
     public void createDirectory(String path) throws Exception {
         String[] names = path.split("/");
         TreeNode currentNode = this.root;
@@ -165,6 +165,7 @@ public class FileSystemTree {
 
     }
 
+    // kreiranje fajla na datoj putanji
     public void createFile(TreeNode currentDirectory, String name, int indexBlockID, int size, FPermission permision) {
         TreeNode newNode = new TreeNode(name, NodeType.FILE);
         String path = currentDirectory.getPath() + "/" + name;
@@ -172,6 +173,7 @@ public class FileSystemTree {
         currentDirectory.addChild(newNode);
     }
 
+    // vraca TreeNode na toj putanji ako postoji, ako ne null
     public TreeNode getByPath(String path) throws Exception {
         String[] names = path.split("/");
         TreeNode currentNode = this.root;
@@ -195,7 +197,7 @@ public class FileSystemTree {
         }
         throw new Exception("Direcotry does not exist");
     }
-
+    //kreira dir u dir-u
     public void createDirectoryInDir(String directoryName, TreeNode currentDirectory) throws Exception {
         if (getChildByName(currentDirectory, directoryName) != null) {
             throw new Exception("Directory already exists");
