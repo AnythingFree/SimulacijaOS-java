@@ -1,21 +1,17 @@
 package hardware_modules;
 
-import java.util.ArrayList;
-
 public class RAM {
-	public final static int size = 1024; // The size of the RAM in bytes
-	public static byte[] memory = new byte[size]; // An array to represent the memory bytes
-	public static int occupiedSize = 0;
+	private int size = 1024;
+	private byte[] memory = new byte[size];
 
-	// Initialize the memory to zeros
-	public static void initializeMemory() {
+	public RAM() {
 		for (int i = 0; i < size; i++) {
 			memory[i] = 0;
 		}
 	}
 
 	// Read a byte from RAM at a given memory address
-	public static byte read(int address) {
+	public byte read(int address) {
 		if (isValidAddress(address)) {
 			return memory[address];
 		} else {
@@ -24,7 +20,7 @@ public class RAM {
 	}
 
 	// Write a byte to RAM at a given memory address
-	public static void write(int address, byte data) {
+	public void write(int address, byte data) {
 		if (isValidAddress(address)) {
 			memory[address] = data;
 		} else {
@@ -33,11 +29,11 @@ public class RAM {
 	}
 
 	// Check if the memory address is within bounds
-	private static boolean isValidAddress(int address) {
+	private boolean isValidAddress(int address) {
 		return address >= 0 && address < size;
 	}
 
-	public static void printMemory() {
+	public void printMemory() {
 		StringBuilder sb = new StringBuilder();
 		System.out.println("======== RAM ========");
 		System.out.print("| ");
@@ -50,12 +46,14 @@ public class RAM {
 		System.out.println(sb.toString());
 	}
 
-	public static ArrayList<String> readFromRam(int startAdress, int endAdress) {
-		return null;
+	public int getRAMSize() {
+		return this.size;
 	}
 
-	public static int[] loadBinary(ArrayList<String> binary) {
-		return null;
+	public void setFree(int startAddress, int endAddress) {
+		for (int i = startAddress; i < endAddress; i++) {
+			memory[i] = 0;
+		}
 	}
 
 }

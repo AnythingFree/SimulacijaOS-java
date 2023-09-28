@@ -12,9 +12,9 @@ import hardware_modules.CPU;
 
 public class Asembler {
 	private Asembler_translator a1 = new Asembler_translator();
-	private CPU a2 = new CPU();
+	private CPU a2 = new CPU(1);
 
-	protected void create_machine_code(String path_to_file, String OUTPUT_FILE_PATH) {
+	protected void create_machine_code(String path_to_file, String OUTPUT_FILE_PATH) throws Exception {
 
 		// pretvara u masinski kod binarno
 		ArrayList<String> binaryCode = a1.asemble(path_to_file);
@@ -29,7 +29,7 @@ public class Asembler {
 
 	}
 
-	protected void execute_code(String path_to_file) {
+	protected void execute_code(String path_to_file) throws Exception {
 		// read machine code
 		ArrayList<String> binaryCode = null;
 		try {
@@ -58,10 +58,11 @@ public class Asembler {
 	// cita binarni kod iz fajla
 	private ArrayList<String> readBinaryCodeFromFile(String path_to_file) throws IOException {
 		ArrayList<String> binaryCode = new ArrayList<String>();
-		
-		BufferedReader reader = new BufferedReader(new FileReader(path_to_file));
-		for (String line : reader.readLine().split(" ")) {
-			binaryCode.add(line);
+
+		try (BufferedReader reader = new BufferedReader(new FileReader(path_to_file))) {
+			for (String line : reader.readLine().split(" ")) {
+				binaryCode.add(line);
+			}
 		}
 		return binaryCode;
 

@@ -24,17 +24,17 @@ public class Bootloader {
 			if (checkIfPermited(input)) {
 				System.out.print(shell.processCommand(input));
 				shOut = shell.getOutput();
-				if (shOut != "")
-					System.out.print(shOut);
+				System.out.print(shOut);
 			} else {
 				System.err.println("Command not recognized.");
 			}
 			input = sc.nextLine();
 		}
+		sc.close();
 	}
 
 	private static boolean checkIfPermited(String input) {
-		List<String> listOfCommands = Arrays.asList("cd", "ls", "ps", "mkdir", "run", "mem", "exit", "rm");
+		List<String> listOfCommands = Arrays.asList("cd", "ls", "ps", "mkdir", "run", "mem", "exit", "rm", "block", "unblock");
 		String[] s = input.split(" ");
 		if (s.length == 1 || s.length == 2) {
 			if (listOfCommands.contains(s[0]))
@@ -46,7 +46,7 @@ public class Bootloader {
 	public static Shell boot() {
 		HDD hdd = new HDD();
 		RAM ram = new RAM();
-		CPU cpu = new CPU();
+		CPU cpu = new CPU(1); //Hz
 
 		Kernel kernel = new Kernel(hdd, ram, cpu);
 

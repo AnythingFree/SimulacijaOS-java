@@ -36,7 +36,7 @@ public class FileSystem {
 		}
 
 		this.freeBlocksIndex = blocks.get(7);
-		blocks.remove(7);
+		// blocks.remove(7);
 
 		makeIndexBlockInHDD(this.freeBlocksIndex, blocks);
 
@@ -74,7 +74,11 @@ public class FileSystem {
 					}
 				}
 				FPermission per = FPermission.READ_WRITE_EXECUTE;
-				createFile(file.getName(), data, per);
+				try {
+					createFile(file.getName(), data, per);
+				} catch (Exception e) {
+					System.out.println(file.getName() + "Fajl nije kreiran:" + e.getMessage());
+				}
 				System.err.println("File " + file.getName() + " loaded.\n");
 			}
 		} else {
@@ -88,8 +92,15 @@ public class FileSystem {
 
 	// split it into blocks sizes and write to blocks
 	private void sendRequests(ArrayList<Block> blocks, byte[][] data) {
-		for (int i = 0; i < blocks.size(); i++) {
-			blocks.get(i).sendRequest(data[i], this.hdd);
+
+		if (data == null) {
+			for (int i = 0; i < blocks.size(); i++) {
+				blocks.get(i).sendRequest(null, this.hdd);
+			}
+		} else {
+			for (int i = 0; i < blocks.size(); i++) {
+				blocks.get(i).sendRequest(data[i], this.hdd);
+			}
 		}
 
 	}
@@ -100,7 +111,7 @@ public class FileSystem {
 	}
 
 	private byte[] readData(ArrayList<Block> blocks) {
-		sendRequests(blocks, new byte[1][]);
+		sendRequests(blocks, null);
 
 		// turn ArrayList<byte[]> into byte[]
 		ArrayList<byte[]> data = this.hdd.read();
@@ -181,7 +192,7 @@ public class FileSystem {
 		writeFreeBlocksToDisk();
 	}
 
-	public void createFile(String fileName, String data, FPermission per) {
+	public void createFile(String fileName, String data, FPermission per) throws Exception {
 		byte[][] dataInBlockSizes = getDataInBlockSizes(data.getBytes());
 		ArrayList<Block> blocksAllocated = allocateBloks(dataInBlockSizes.length);
 		Block indexBlock = blocksAllocated.get(0);
@@ -258,7 +269,6 @@ public class FileSystem {
 	}
 
 	private void makeIndexBlockInHDD(Block indexBlock, ArrayList<Block> blocks) {
-		System.out.println("indexBlock: " + indexBlock.getId());
 		byte[][] dataToWrite = new byte[1][blocks.size()];
 		// array to byte
 		for (int i = 0; i < blocks.size(); i++) {
@@ -289,20 +299,19 @@ public class FileSystem {
 			}
 
 		} else {
-			dataInBlockSizes = new byte[1][];
+			dataInBlockSizes = new byte[1][1];
 			dataInBlockSizes[0] = data;
 		}
 
 		return dataInBlockSizes;
 	}
 
-	private ArrayList<Block> allocateBloks(int length) {
+	private ArrayList<Block> allocateBloks(int length) throws Exception {
 
 		ArrayList<Block> blocksAllocated = new ArrayList<Block>();
 		for (int i = 0; i < length; i++) {
 			if (this.freeBlocks.size() == 0) {
-				System.err.println("No free blocks. allocateBloks");
-				return null;
+				throw new Exception("No free blocks. allocateBloks");
 			}
 			blocksAllocated.add(this.freeBlocks.get(0));
 			this.freeBlocks.remove(0);
@@ -317,6 +326,27 @@ public class FileSystem {
 
 	public String getCurrentDirPath() {
 		return this.currentDirectory.getPath();
+	}
+
+	public byte[] getFileFromDisk(String nameOfFile) throws Exception {
+		TreeNode node = this.fileSystemTree.getChildByName(this.currentDirectory, nameOfFile);
+		if (node == null) {
+			throw new Exception("File with that name does not exist.");
+		}
+		_Metadata meta = node.getMetadata();
+		int indexBlockPointerID = meta.getIndexBlockPointer();
+		Block block = this.blocks.get(indexBlockPointerID);
+		ArrayList<Block> blockList = new ArrayList<Block>();
+		blockList.add(block);
+
+		byte[] indexBlockData = readData(blockList);
+
+		blockList.clear();
+		for (byte b : indexBlockData) {
+			blockList.add(this.blocks.get((int) b));
+		}
+
+		return readData(blockList);
 	}
 
 }

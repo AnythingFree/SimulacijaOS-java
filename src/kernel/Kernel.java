@@ -1,18 +1,18 @@
 package kernel;
 
-import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 
-import file_system.FileManager;
-import file_system.FileSystem;
+import assembler.Asembler_translator;
 import hardware_modules.CPU;
 import hardware_modules.HDD;
 import hardware_modules.RAM;
-import memory_management.RamManager;
+import memory_management.MemoryManager;
+import memory_management.Partition;
 import process.ProcessScheduler;
 
 // shell poziva kernelove funkcije
-// shell: cd ls ps mkdir run mem exit rm
+// shell: cd ls ps mkdir run mem exit rm block unblock
 
 // Kernel is the core part of an operating system which manages
 // system resources. It also acts like a bridge between
@@ -21,15 +21,12 @@ import process.ProcessScheduler;
 // CPU Memory Disks IO
 public class Kernel {
 
-	private FileManager fileManager;
-	private RamManager ramManager;
+	private MemoryManager memoryManager;
 	private ProcessScheduler processScheduler;
 
 	public Kernel(HDD hdd, RAM ram, CPU cpu) {
-		this.fileManager = new FileManager(hdd);
-		this.ramManager = new RamManager(ram);
-		this.processScheduler = new ProcessScheduler(cpu, ram);
-		ProcessScheduler.startCleanUpThread();
+		this.memoryManager = new MemoryManager(hdd, ram);
+		this.processScheduler = new ProcessScheduler(cpu);
 	}
 
 	// SHELL KOMANDE cd ls ps mkdir run mem exit rm
@@ -37,7 +34,7 @@ public class Kernel {
 
 	public boolean listFiles() {
 		try {
-			fileManager.listFiles();
+			memoryManager.listFiles();
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 			return false;
@@ -47,7 +44,7 @@ public class Kernel {
 
 	public boolean makeDirectory(String nameOfNewDir) {
 		try {
-			fileManager.makeDirectory(nameOfNewDir);
+			memoryManager.makeDirectory(nameOfNewDir);
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 			return false;
@@ -57,7 +54,7 @@ public class Kernel {
 
 	public boolean changeDirectory(String nameORpath) {
 		try {
-			fileManager.changeCurrentDirectory(nameORpath);
+			memoryManager.changeCurrentDirectory(nameORpath);
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 			return false;
@@ -67,7 +64,7 @@ public class Kernel {
 
 	public boolean deleteFileORDir(String name) {
 		try {
-			fileManager.deleteFileORDir(name);
+			memoryManager.deleteFileORDir(name);
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 			return false;
@@ -76,24 +73,70 @@ public class Kernel {
 	}
 
 	public String getCurrentDir() {
-		return fileManager.getCurrentDir();
+		return memoryManager.getCurrentDir();
 	}
 
 	// ============= ram manager ============================
+	public void printRAM() {
+		memoryManager.printRAM();
+	}
 
 	// ============= process scheduler ============================
-
-	// ovo treba da bude tred ili slicno ("run komanda vraca kontrolu korisniku")
-	public void createProcess(String path) {
-		// load binary file from file
-		// ArrayList<String> binary = HDD.getBinary(path);
-		// int[] startEndAdress = RAM.loadBinary(binary);
-
-		// create process
-		// ProcessScheduler.createProcess(startEndAdress[0], startEndAdress[1]);
-	}
 
 	public void shutDown() {
 	}
 
+	public boolean blockProcess(String string) {
+		try {
+			processScheduler.blockProcess(string);
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+			System.out.println(e.getStackTrace()[0]);
+			return false;
+		}
+		return true;
+	}
+
+	public boolean unblockProcess(String string) {
+		try {
+			processScheduler.unblockProcess(string);
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+			System.out.println(e.getStackTrace()[0]);
+			return false;
+		}
+		return true;
+	}
+
+	public void printProcesses() {
+		processScheduler.printProcesses();
+	}
+
+	// =================== process =============================
+	public boolean runProcesses(String nameOfFile) {
+		try {
+			// (dobavi iz diska podatke, pretvori u masinsku inst, sacuvaj u ram)
+
+			// dobavi iz diska
+			String text = memoryManager.getFileFromDisk(nameOfFile);
+
+			// pretvori u masinsku inst
+			ArrayList<String> instructionsString = new ArrayList<>(Arrays.asList(text.split("\n")));
+			instructionsString.removeIf(String::isEmpty);
+			ArrayList<String> instructionsBinary = Asembler_translator.assemble2(instructionsString);
+
+			// sacuvaj u ram
+			Partition partition = memoryManager.loadToRam(instructionsBinary);
+
+			// (napravi proces i pusti ga da se izvrsava)
+			processScheduler.createProcess(partition);
+
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+			System.out.println(e.getStackTrace()[0]);
+			return false;
+		}
+
+		return true;
+	}
 }

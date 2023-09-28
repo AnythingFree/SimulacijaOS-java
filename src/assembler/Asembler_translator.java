@@ -1,19 +1,15 @@
 package assembler;
 
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import _interfaces.Asembler_interpreter_i;
-
 public class Asembler_translator {
 
 	@SuppressWarnings("serial")
-	private HashMap<String, String> instructionMappings = new HashMap<>() {
+	private static HashMap<String, String> instructionMappings = new HashMap<>() {
 		{
 			put("HLT", "0000");
 			put("ADD", "0001");
@@ -41,14 +37,14 @@ public class Asembler_translator {
 	}
 
 	// funkcija kojom pravimo 4 cifre u izlaznoj datoteci
-	private String intToBinary(String ins) {
+	private static String intToBinary(String ins) {
 		int number = Integer.parseInt(ins);
 		String binaryString = Integer.toBinaryString(number);
 		return String.format("%04d", Integer.parseInt(binaryString));
 	}
 
 	// pretvara insptrukcije u binarno
-	private ArrayList<String> assembleInstructions(ArrayList<String> instructions) {
+	private static ArrayList<String> assembleInstructions(ArrayList<String> instructions) throws Exception {
 		ArrayList<String> binaryCode = new ArrayList<String>();
 
 		for (String instruction : instructions) {
@@ -58,6 +54,8 @@ public class Asembler_translator {
 
 			} catch (NumberFormatException e) {
 				instructionBinary = instructionMappings.get(instruction);
+			} catch (Exception e) {
+				throw new Exception("Nepoznata instrukcija za asembler");
 			}
 
 			binaryCode.add(instructionBinary);
@@ -66,7 +64,7 @@ public class Asembler_translator {
 		return binaryCode;
 	}
 
-	private String removeComments(String instruction) {
+	private static String removeComments(String instruction) {
 		// Remove everything after the first occurrence of ';'
 		int commentIndex = instruction.indexOf(';');
 		if (commentIndex != -1) {
@@ -75,7 +73,7 @@ public class Asembler_translator {
 		return instruction;
 	}
 
-	private ArrayList<String> lexer(ArrayList<String> instructions) {
+	private static ArrayList<String> lexer(ArrayList<String> instructions) {
 		ArrayList<String> cleanedInstructions = new ArrayList<>();
 
 		// remove empty lines
@@ -101,7 +99,7 @@ public class Asembler_translator {
 		return cleanedInstructions;
 	}
 
-	protected ArrayList<String> asemble(String path_to_file) {
+	protected ArrayList<String> asemble(String path_to_file) throws Exception {
 
 		try {
 			ArrayList<String> instructions;
@@ -120,6 +118,17 @@ public class Asembler_translator {
 		}
 
 		return null;
+	}
+
+	public static ArrayList<String> assemble2(ArrayList<String> instructions) throws Exception {
+
+		instructions = lexer(instructions); // DOPUSTA DA NOVI RED ZAPOCINJE SA BROJEM DA LI TO DOZVOLITI?
+		// instructions = parser(instructions); check sintax?
+
+		ArrayList<String> binaryCode = assembleInstructions(instructions);
+
+		return binaryCode;
+
 	}
 
 }

@@ -1,8 +1,6 @@
 package shell;
 
-import hardware_modules.RAM;
 import kernel.Kernel;
-import process.ProcessScheduler;
 
 public class Shell {
 	private Kernel kernel;
@@ -45,18 +43,30 @@ public class Shell {
 				break;
 			// =============== OVO JE MOJE =================================
 			case "run":
-				out = "Izvrsena naredba: pokreće određeni proces ili aplikaciju.\n";
-				// Pokretanje procesa
-				ProcessScheduler.runProcesses();
+				if (s.length == 2 && kernel.runProcesses(s[1]))
+					out = "Izvrsena naredba: pokreće određeni proces ili aplikaciju.\n";
+				else
+					out = "Ime ili broj parametara nije valjano.\n";
 				break;
 			case "ps":
 				out = "Izvrsena naredba: ispisuje popis aktivnih procesa na računaru.\n";
-				// ProcessScheduler.printProcesses();
+				kernel.printProcesses();
 				break;
 			case "mem":
 				out = "Izvrsena naredba: prikazuje informacije o zauzeću RAM memorije na računaru.\n";
-				// ispis zauzeća RAM memorije
-				RAM.printMemory();
+				kernel.printRAM();
+				break;
+			case "block":
+				if (s.length == 2 && kernel.blockProcess(s[1]))
+					out = "Izvrsena naredba:  blokira proces.\n";
+				else
+					out = "Ime ili broj param nije valjano.\n";
+				break;
+			case "unblock":
+				if (s.length == 2 && kernel.unblockProcess(s[1]))
+					out = "Izvrsena naredba:  odblokira proces.\n";
+				else
+					out = "Ime ili broj param nije valjano.\n";
 				break;
 			// ========================================================================
 			case "exit":
