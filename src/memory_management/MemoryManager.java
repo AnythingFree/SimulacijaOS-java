@@ -53,4 +53,8 @@ public class MemoryManager {
         this.ramManager.printRAM();
     }
 
+    public void defragmentation() {
+        this.ramManager.defragmentation();
+    }
+
 }

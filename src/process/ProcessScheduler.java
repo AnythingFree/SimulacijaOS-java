@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.PriorityQueue;
 
 import hardware_modules.CPU;
+import hardware_modules.RAM;
 import memory_management.Partition;
 
 public class ProcessScheduler {
@@ -11,6 +12,8 @@ public class ProcessScheduler {
 	private volatile ArrayList<ProcessMY> processList = new ArrayList<>();
 	private volatile ArrayList<ProcessMY> doneProcesses = new ArrayList<>();
 	private ArrayList<Integer> idlist = new ArrayList<>();
+
+	public Object defragSignal = new Object();
 
 	private CPU cpu;
 
@@ -21,7 +24,11 @@ public class ProcessScheduler {
 	}
 
 	private void addProcess(ProcessMY process) {
-		processQueue.add(process);
+		synchronized (processQueue) {
+			System.out.println("Adding process with id " + process.getId() + " to the queue");
+			processQueue.add(process);
+			processQueue.notify();
+		}
 		synchronized (processList) {
 			processList.add(process);
 		}
@@ -39,20 +46,17 @@ public class ProcessScheduler {
 
 	public void blockProcess(String processID) throws Exception {
 		ProcessMY process = getProcesByID(processID);
-		if (process.getState() == _ProcessState.RUNNING) {
-			process.block();
-		} else
-			throw new Exception("Process with id " + processID + " is not running");
+		process.block();
 
 	}
 
 	public void unblockProcess(String processID) throws Exception {
 		ProcessMY process = getProcesByID(processID);
-		if (process.getState() == _ProcessState.BLOCKED) {
-			process.unblock();
+		process.unblock();
+		synchronized (processQueue) {
 			processQueue.add(process);
-		} else
-			throw new Exception("Process with id " + processID + " is not blocked");
+			processQueue.notify();
+		}
 
 	}
 
@@ -69,15 +73,49 @@ public class ProcessScheduler {
 
 	// this cleans up the processList from terminated processes
 	private void startRunThread() {
+
 		Thread runThread = new Thread(() -> {
+			int brojac = 0;
+			ProcessMY currentProcess;
 			while (true) {
-				if (cpu.isFree() && !processQueue.isEmpty()) { // cpu is free trenutno ne treba ali neka stoji
-					ProcessMY currentProcess = processQueue.poll();
-					currentProcess.start(cpu);
+
+				synchronized (processQueue) {
+					if (processQueue.isEmpty())
+						try {
+							processQueue.wait();
+						} catch (InterruptedException e) {
+							e.printStackTrace();
+						}
+
+					currentProcess = processQueue.poll();
 				}
+
+				// notifies the cpu and waits for it to finish the process (or to be blocked)
+				currentProcess.start(cpu);
+
+				// ako je blokiran i bio je u procesoru, sacuvaj stanje
+				if (currentProcess.getState() == _ProcessState.BLOCKED && cpu.getProcess().equals(currentProcess))
+					currentProcess.saveState(cpu.getProgramCounter(), cpu.getStackPointer(), cpu.getOutPointer());
+
+				brojac++;
+
+				System.out.println("brojac: " + brojac);
+				if (brojac > 2) {
+					brojac = 0;
+					synchronized (this.defragSignal) {
+						this.defragSignal.notify();
+						try {
+							this.defragSignal.wait();
+						} catch (InterruptedException e) {
+							e.printStackTrace();
+						}
+					}
+				}
+
 			}
 		});
 		runThread.start();
+
 	}
 
 	// this cleans up the processList from terminated processes
@@ -104,7 +142,7 @@ public class ProcessScheduler {
 							// set DONE
 							process.setState(_ProcessState.DONE);
 
-							// remove from queque
+							// remove
 							processesToRemove.add(process);
 							idlistToRemove.add(process.getId());
 						}

@@ -22,7 +22,6 @@ public class CPU extends Thread {
 	private int stackPointer;
 
 	private boolean hlt = false;
-	private boolean free = true;
 
 	private int speed;
 	public Object signal = new Object();
@@ -59,15 +58,16 @@ public class CPU extends Thread {
 			synchronized (this.signal) {
 				try {
 					this.signal.wait();
+
+					this.hlt = false;
+					startWorking();
+
+					this.signal.notify();
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
 			}
 
-			this.free = false;
-			this.hlt = false;
-			startWorking();
-			this.free = true;
 		}
 
 	}
@@ -93,9 +93,6 @@ public class CPU extends Thread {
 				break;
 			}
 			programCounter++;
-		}
-		if (this.process.getState() == _ProcessState.BLOCKED) {
-			this.process.saveState(programCounter, stackPointer, outPointer);
 		}
 
 	}
@@ -208,14 +205,6 @@ public class CPU extends Thread {
 		return this.partition.readFromRam(adress);
 	}
 
-	public boolean isFree() {
-		return this.free;
-	}
-
-	public void setFreeStatus(boolean b) {
-		this.free = b;
-	}
-
 	public int getProgramCounter() {
 		return this.programCounter;
 	}
@@ -250,6 +239,10 @@ public class CPU extends Thread {
 
 	public void signal() {
 
+	}
+
+	public ProcessMY getProcess() {
+		return this.process;
 	}
 
 }

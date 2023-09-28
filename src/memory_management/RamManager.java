@@ -4,6 +4,8 @@ import java.util.ArrayList;
 
 import hardware_modules.RAM;
 
+import java.util.Collections;
+
 public class RamManager {
     private RAM ram;
     static boolean[] MAT; // true - zauzeto, false - slobodno
@@ -15,29 +17,30 @@ public class RamManager {
     }
 
     public Partition loadToRam(ArrayList<String> instructionsBinary) throws Exception {
-        int sizeOfPartition = instructionsBinary.size() + Partition.getSizeOfStack() + Partition.getSizeOfOutput();
+        synchronized (ram) {
+            int sizeOfPartition = instructionsBinary.size() + Partition.getSizeOfStack() + Partition.getSizeOfOutput();
 
-        int startAddress = getAdress(sizeOfPartition);
-        if (startAddress == -1) {
-            throw new Exception("Nema dovoljno RAM memorije");
+            int startAddress = getAdress(sizeOfPartition);
+            if (startAddress == -1) {
+                throw new Exception("Nema dovoljno RAM memorije");
+            }
+            int endAddress = startAddress + sizeOfPartition - 1;
+
+            // write data to ram
+            for (int i = startAddress; i < startAddress + instructionsBinary.size(); i++) {
+                this.ram.write(i, (byte) Integer.parseInt(instructionsBinary.get(i - startAddress), 2));
+                MAT[i] = true;
+            }
+            // set mat
+            for (int i = startAddress + instructionsBinary.size(); i <= endAddress; i++) {
+                MAT[i] = true;
+            }
+
+            // create partition
+            Partition partition = new Partition(startAddress, endAddress, ram);
+            this.partitions.add(partition);
+            return partition;
         }
-        int endAddress = startAddress + sizeOfPartition - 1;
-
-        // write data to ram
-        for (int i = startAddress; i < startAddress + instructionsBinary.size(); i++) {
-            this.ram.write(i, (byte) Integer.parseInt(instructionsBinary.get(i - startAddress), 2));
-            MAT[i] = true;
-        }
-        // set mat
-        for (int i = startAddress + instructionsBinary.size(); i <= endAddress; i++) {
-            MAT[i] = true;
-        }
-
-        // create partition
-        Partition partition = new Partition(startAddress, endAddress, ram);
-        this.partitions.add(partition);
-
-        return partition;
     }
 
     private int getAdress(int size) {
@@ -61,7 +64,39 @@ public class RamManager {
     }
 
     public void printRAM() {
-        ram.printMemory();
+        synchronized (ram) {
+            ram.printMemory();
+        }
+
+    }
+
+    public void defragmentation() {
+        synchronized (ram) {
+            ArrayList<Partition> freePartitions = new ArrayList<>();
+            for (Partition p : partitions) {
+                if (p.isFree())
+                    freePartitions.add(p);
+            }
+            System.out.println("Free partitions: " + freePartitions.size());
+            partitions.removeAll(freePartitions);
+            Collections.sort(partitions);
+
+            System.out.println("Partitions: " + partitions.size());
+            Partition previousOne = partitions.get(0);
+            if (previousOne.getStartAddress() != 0) {
+                previousOne.moveToStartAdress(0);
+            }
+            System.out.println("partition moved to 0");
+            Partition p;
+            for (int i = 1; i < partitions.size(); i++) {
+                p = partitions.get(i);
+                if (p.getStartAddress() != previousOne.getEndAddress() + 1) {
+                    p.moveToStartAdress(previousOne.getEndAddress() + 1);
+                }
+                previousOne = p;
+            }
+        }
+
     }
 
 }

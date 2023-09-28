@@ -1,0 +1,8 @@
+; (5+3)*2
+PUSH 5
+PUSH 3
+ADD
+PUSH 2
+MUL
+POP
+HLT

@@ -13,27 +13,39 @@ public class ProcessMY implements Comparable<ProcessMY> {
 	}
 
 	public void start(CPU cpu) {
-		while (getState() == _ProcessState.READY) {
+		if (getState() == _ProcessState.READY) {
 			setState(_ProcessState.RUNNING);
 			cpu.setRegisters(this);
 
 			synchronized (cpu.signal) {
 				cpu.signal.notify();
+
+				try {
+					cpu.signal.wait();
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
 			}
-
+		} else if (getState() == _ProcessState.BLOCKED) {
+			return;
+		} else {
+			System.out.println("Process with id " + getId() + " is terminated or done or running");
 		}
 	}
 
-	public void block() {
-		if (this.pcb.getState() == _ProcessState.RUNNING) {
+	public void block() throws Exception {
+		if (getState() == _ProcessState.RUNNING || getState() == _ProcessState.READY) {
 			setState(_ProcessState.BLOCKED);
-		}
+		} else
+			throw new Exception("Process with id " + getId() + " is not in running or ready state");
+
 	}
 
-	public void unblock() {
-		if (this.pcb.getState() == _ProcessState.BLOCKED) {
+	public void unblock() throws Exception {
+		if (getState() == _ProcessState.BLOCKED) {
 			this.setState(_ProcessState.READY);
-		}
+		} else
+			throw new Exception("Process with id " + getId() + " is not blocked");
 
 	}
 

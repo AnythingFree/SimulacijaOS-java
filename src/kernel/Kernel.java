@@ -27,6 +27,7 @@ public class Kernel {
 	public Kernel(HDD hdd, RAM ram, CPU cpu) {
 		this.memoryManager = new MemoryManager(hdd, ram);
 		this.processScheduler = new ProcessScheduler(cpu);
+		defragmentationThread();
 	}
 
 	// SHELL KOMANDE cd ls ps mkdir run mem exit rm
@@ -63,6 +64,8 @@ public class Kernel {
 	}
 
 	public boolean deleteFileORDir(String name) {
+		if (name.equals("/") || name.equals("root"))
+			return false;
 		try {
 			memoryManager.deleteFileORDir(name);
 		} catch (Exception e) {
@@ -82,9 +85,6 @@ public class Kernel {
 	}
 
 	// ============= process scheduler ============================
-
-	public void shutDown() {
-	}
 
 	public boolean blockProcess(String string) {
 		try {
@@ -138,5 +138,32 @@ public class Kernel {
 		}
 
 		return true;
+	}
+
+	public void defragmentationThread() {
+		Thread defragThread = new Thread(() -> {
+
+			while (true) {
+
+				synchronized (processScheduler.defragSignal) {
+					try {
+						processScheduler.defragSignal.wait();
+
+						System.out.println("======= Defragmentacija (start) =======");
+						memoryManager.printRAM();
+						memoryManager.defragmentation();
+						memoryManager.printRAM();
+						System.out.println("======= Defragmentacija (kraj) =======");
+
+						processScheduler.defragSignal.notify();
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+				}
+
+			}
+
+		});
+		defragThread.start();
 	}
 }

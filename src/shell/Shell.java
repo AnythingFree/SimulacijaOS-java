@@ -3,9 +3,8 @@ package shell;
 import kernel.Kernel;
 
 public class Shell {
-	private static Kernel kernel;
+	private Kernel kernel;
 	public static String output = "";
-	public static String c = "";
 
 	public Shell(Kernel k) {
 		this.kernel = k;
@@ -71,7 +70,7 @@ public class Shell {
 				break;
 			// ========================================================================
 			case "exit":
-				kernel.shutDown();
+				// kernel.shutDown();
 				out = "Izvrsena naredba: zatvara CLI, zaustavljajući izvršavanje programa.\n";
 				// izlazak iz CLI
 				System.exit(1);

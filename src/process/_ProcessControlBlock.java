@@ -7,26 +7,25 @@ import memory_management.Partition;
 
 public class _ProcessControlBlock {
 	private int id;
-	private int startAdress;
+
 	private Date arrivalTime;
 	private volatile _ProcessState state;
 	private Partition partition;
 
-	private int stackpointer;
-	private int programCounter;
-	private int outPointer;
+	private int stackpointer_relative;
+	private int programCounter_relative;
+	private int outPointer_relative;
 
 	_ProcessControlBlock(int id, Partition partition, Date date, _ProcessState ready) {
 		this.id = id;
-		this.startAdress = partition.getStartAddress();
 
 		this.arrivalTime = date;
 		this.state = ready;
 		this.partition = partition;
 
-		this.outPointer = partition.getOutputAdress();
-		this.stackpointer = partition.getStartOfStack();
-		this.programCounter = partition.getStartOfCode();
+		this.outPointer_relative = 0;
+		this.stackpointer_relative = 0;
+		this.programCounter_relative = 0;
 
 	}
 
@@ -47,38 +46,33 @@ public class _ProcessControlBlock {
 	}
 
 	int getStartAdress() {
-		return startAdress;
+		return this.partition.getStartAddress();
 	}
 
 	public int getProgramCounter() {
-		return this.programCounter;
+		return this.partition.getStartOfCode() + this.programCounter_relative;
 	}
 
 	public void setProgramCounter(int programCounter) {
-		this.programCounter = programCounter;
+		this.programCounter_relative = programCounter - this.partition.getStartOfCode();
 	}
 
 	public int getStackPointer() {
-		return stackpointer;
+		return this.partition.getStartOfStack() + this.stackpointer_relative;
 	}
 
-	public void setStackPointer(int p) {
-		stackpointer = p;
+	public void setStackPointer(int stackP) {
+		this.stackpointer_relative = stackP - this.partition.getStartOfStack();
 	}
 
 	public int getOutPointer() {
-		return this.outPointer;
+		return this.partition.getOutputAdress() + this.outPointer_relative;
 	}
 
-	public void setOutPointer(int outPointer2) {
-		this.outPointer = outPointer2;
+	public void setOutPointer(int outPointer) {
+		this.outPointer_relative = outPointer - this.partition.getOutputAdress();
 	}
 
-	public void saveRegisters(CPU cpu) {
-		this.programCounter = cpu.getProgramCounter();
-		this.stackpointer = cpu.getStackPointer();
-		this.outPointer = cpu.getOutPointer();
-	}
 	// ========== partition values ============
 
 	public int getStartOfCode() {
@@ -107,9 +101,9 @@ public class _ProcessControlBlock {
 
 	@Override
 	public String toString() {
-		return "_ProcessControlBlock [id=" + id + ", startAdress=" + startAdress + ", arrivalTime=" + arrivalTime
-				+ ", state=" + state + ", partition=" + partition + ", stackpointer=" + stackpointer
-				+ ", programCounter=" + programCounter + ", outPointer=" + outPointer + "]";
+		return "_ProcessControlBlock [id=" + id + ", startAdress=" + getStartAdress() + ", \narrivalTime=" + arrivalTime
+				+ ", state=" + state + ", \npartition=" + partition + ", stackpointer=" + getStackPointer()
+				+ ", \nprogramCounter=" + getProgramCounter() + ", outPointer=" + getOutPointer() + "]\n";
 	}
 
 }

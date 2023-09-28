@@ -15,7 +15,7 @@ public class RAM {
 		if (isValidAddress(address)) {
 			return memory[address];
 		} else {
-			throw new IllegalArgumentException("Invalid memory address");
+			throw new IllegalArgumentException("Invalid memory address" + address);
 		}
 	}
 
@@ -24,7 +24,7 @@ public class RAM {
 		if (isValidAddress(address)) {
 			memory[address] = data;
 		} else {
-			throw new IllegalArgumentException("Invalid memory address");
+			throw new IllegalArgumentException("Invalid memory address" + address);
 		}
 	}
 
