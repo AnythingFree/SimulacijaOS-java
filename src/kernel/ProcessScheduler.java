@@ -94,10 +94,6 @@ public class ProcessScheduler {
 				// notifies the cpu and waits for it to finish the process (or to be blocked)
 				currentProcess.start(cpu);
 
-				// ako je blokiran i bio je u procesoru, sacuvaj stanje
-				if (currentProcess.getState() == _ProcessState.BLOCKED && cpu.getProcess().equals(currentProcess))
-					currentProcess.saveState(cpu.getProgramCounter(), cpu.getStackPointer(), cpu.getOutPointer());
-
 				brojac++;
 
 				System.out.println("brojac: " + brojac);
@@ -174,16 +170,19 @@ public class ProcessScheduler {
 
 	public void printProcesses() {
 		// go through processQueue and print all processes
+		int broj = 0;
 		synchronized (processList) {
-			System.out.println("Active process list:");
+			System.out.println("========Active process list:==========");
 			for (ProcessMY p : processList) {
-				System.out.println(p);
+				System.out.println("(" + broj + ") " + p);
+				broj++;
 			}
 		}
 		synchronized (doneProcesses) {
-			System.out.println("Done process list:");
+			System.out.println("=========Done process list:===========");
 			for (ProcessMY p : doneProcesses) {
-				System.out.println(p);
+				System.out.println("(" + broj + ") " + p);
+				broj++;
 			}
 		}
 

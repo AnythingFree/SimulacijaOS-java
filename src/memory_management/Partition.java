@@ -135,10 +135,24 @@ public class Partition implements Comparable<Partition> {
         this.startAddress = newAdress;
         this.endAddress = newAdress + size - 1;
         this.endOfCode = endAddress - sizeOfStack - sizeOfOutput;
-        
+
         this.startOfStack = endOfCode + 1;
         this.endOfStack = endOfCode + sizeOfStack;
         this.outputAdress = endOfStack + 1;
+    }
+
+    @Override
+    public String toString() {
+        return "\n    Start Address: " + startAddress +
+
+                "\n    Start of Code: " + startAddress +
+                "\n    End of Code: " + endOfCode +
+                "\n    Start of Stack: " + startOfStack +
+                "\n    End of Stack: " + endOfStack +
+                "\n    Output Address: " + outputAdress +
+
+                "\n    End Address: " + endAddress +
+                "\n    Free: " + free;
     }
 
 }

@@ -1,7 +1,7 @@
 package hardware_modules;
 
 public class RAM {
-	private int size = 1024;
+	private int size = 100;
 	private byte[] memory = new byte[size];
 
 	public RAM() {
@@ -38,7 +38,7 @@ public class RAM {
 		System.out.println("======== RAM ========");
 		System.out.print("| ");
 		for (int i = 0; i < size; i++) {
-			if (i % 14 == 0 && i != 0) {
+			if (i % 10 == 0 && i != 0) {
 				sb.append("\n| ");
 			}
 			sb.append(memory[i] + " | ");

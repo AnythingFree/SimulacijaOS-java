@@ -2,7 +2,6 @@ package process;
 
 import java.util.Date;
 
-import hardware_modules.CPU;
 import memory_management.Partition;
 
 public class _ProcessControlBlock {
@@ -101,9 +100,16 @@ public class _ProcessControlBlock {
 
 	@Override
 	public String toString() {
-		return "_ProcessControlBlock [id=" + id + ", startAdress=" + getStartAdress() + ", \narrivalTime=" + arrivalTime
-				+ ", state=" + state + ", \npartition=" + partition + ", stackpointer=" + getStackPointer()
-				+ ", \nprogramCounter=" + getProgramCounter() + ", outPointer=" + getOutPointer() + "]\n";
+		return "Process Control Block" +
+				"\nID: " + id +
+				"\nArrival Time: " + arrivalTime +
+				"\nState: " + state +
+				
+				"\nPartition: " + partition +
+				
+				"\nStack Pointer: " + getStackPointer() +
+				"\nProgram Counter: " + getProgramCounter() +
+				"\nOut Pointer: " + getOutPointer() + "\n";
 	}
 
 }

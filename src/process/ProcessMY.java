@@ -26,6 +26,8 @@ public class ProcessMY implements Comparable<ProcessMY> {
 					e.printStackTrace();
 				}
 			}
+
+			saveState(cpu.getProgramCounter(), cpu.getStackPointer(), cpu.getOutPointer());
 		} else if (getState() == _ProcessState.BLOCKED) {
 			return;
 		} else {
