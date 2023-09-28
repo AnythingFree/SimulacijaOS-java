@@ -1,7 +1,7 @@
 package hardware_modules;
 
 public class RAM {
-	private int size = 100;
+	private int size = 256;
 	private byte[] memory = new byte[size];
 
 	public RAM() {
