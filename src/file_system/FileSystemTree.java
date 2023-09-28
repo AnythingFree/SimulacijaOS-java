@@ -95,6 +95,8 @@ public class FileSystemTree {
         fileTree.getRoot().addChild(directoryNode);
         fileTree.getRoot().addChild(dir2);
 
+        // fileTree.getRoot().getChildren().remove(dir2);
+
         // Print the file system tree
         printFileTree(fileTree.getRoot(), "");
     }
@@ -130,8 +132,9 @@ public class FileSystemTree {
         return names;
     }
 
-    public void deleteNode(TreeNode currentNode, TreeNode nodeToDelete) {
-        currentNode.getChildren().remove(nodeToDelete);
+    public void deleteNode(TreeNode nodeToDelete) {
+        TreeNode parent = nodeToDelete.getParent();
+        parent.getChildren().remove(nodeToDelete);
     }
 
     // ovo mozda nece trebati ne znam

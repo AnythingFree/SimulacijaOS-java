@@ -60,6 +60,10 @@ public class Shell {
 				out = "Izvrsena naredba: prikazuje informacije o zauzeću RAM memorije na računaru.\n";
 				kernel.printRAM();
 				break;
+			case "defrag":
+				out = "Izvrsena naredba: defragmentacija rama.\n";
+				kernel.defragment();
+				break;
 			case "block":
 				if (s.length == 2 && kernel.blockProcess(s[1]))
 					out = "Izvrsena naredba:  blokira proces.\n";

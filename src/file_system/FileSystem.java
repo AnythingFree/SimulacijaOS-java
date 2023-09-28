@@ -43,7 +43,12 @@ public class FileSystem {
 		this.freeBlocks = new ArrayList<>(blocks);
 		// updateFreeBlocksInHDD();
 
-		loadASMFiles();
+		try {
+			loadASMFiles();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	public FileSystem(File file) {
@@ -51,13 +56,15 @@ public class FileSystem {
 		this.currentDirectory = fileSystemTree.getRoot();
 	}
 
-	private void loadASMFiles() {
+	private void loadASMFiles() throws Exception {
 		String path = "src//assembler//FILES"; // Replace with the correct path
 
 		File folder = new File(path);
 		File[] files = folder.listFiles();
 
 		if (files != null) {
+			createDirectoryInCurrentDir("asem_files");
+			changeCurrentDirectory("asem_files");
 			for (File file : files) {
 
 				String data = "";
@@ -81,6 +88,7 @@ public class FileSystem {
 				}
 				System.err.println("File " + file.getName() + " loaded.\n");
 			}
+			changeCurrentDirectory("/");
 		} else {
 			System.err.println("The specified path is not a directory.");
 		}
@@ -137,20 +145,24 @@ public class FileSystem {
 	public void delete(String name) throws Exception {
 		TreeNode node = this.fileSystemTree.getChildByName(this.currentDirectory, name);
 		if (node == null) {
+			System.out.println("hej");
 			throw new Exception("File or directory with that name does not exist.");
 		}
-		delete2(node, this.currentDirectory);
+		delete2(node); // trazi i brise samo fajlove iz diska ne iz fileTree
+		this.fileSystemTree.deleteNode(node); // java garbage collector ce obrisati i childove
 	}
 
-	private void delete2(TreeNode node, TreeNode curent) throws Exception {
+	private void delete2(TreeNode node) throws Exception {
+		System.out.println("Deleting " + node.getName());
 		if (node.getType() == NodeType.DIRECTORY) {
 			for (TreeNode child : node.getChildren()) {
-				delete2(child, node);
+				System.out.println("Child " + child.getName());
+				delete2(child);
 			}
 		} else {
 			deleteFile(node);
 		}
-		this.fileSystemTree.deleteNode(curent, node);
+		System.out.println("Deleted2 " + node.getName());
 
 	}
 
@@ -169,7 +181,7 @@ public class FileSystem {
 		FPermission permission = node.getMetadata().getPermision();
 		if (permission == FPermission.READ || permission == FPermission.EXECUTE
 				|| permission == FPermission.READ_EXECUTE) {
-			throw new Exception("Stoped. Read only file can not be deleted: " + node.getName());
+			throw new Exception("Stoped. only file with write permission can be deleted: " + node.getName());
 		}
 
 		int indexBlockPointerID = node.getMetadata().getIndexBlockPointer();

@@ -169,4 +169,10 @@ public class Kernel {
 		});
 		defragThread.start();
 	}
+
+	public void defragment() {
+		synchronized (processScheduler.defragSignal) {
+			processScheduler.defragSignal.notify();
+		}
+	}
 }
