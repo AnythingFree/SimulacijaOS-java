@@ -1,11 +1,12 @@
-package process;
+package kernel;
 
 import java.util.ArrayList;
 import java.util.PriorityQueue;
 
 import hardware_modules.CPU;
-import hardware_modules.RAM;
 import memory_management.Partition;
+import process.ProcessMY;
+import process._ProcessState;
 
 public class ProcessScheduler {
 	volatile static PriorityQueue<ProcessMY> processQueue = new PriorityQueue<>();

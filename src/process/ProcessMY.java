@@ -54,7 +54,7 @@ public class ProcessMY implements Comparable<ProcessMY> {
 
 	}
 
-	synchronized void setState(_ProcessState state) {
+	public synchronized void setState(_ProcessState state) {
 		this.pcb.setState(state);
 	}
 

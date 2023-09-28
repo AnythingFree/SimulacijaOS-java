@@ -7,9 +7,7 @@ import assembler.Asembler_translator;
 import hardware_modules.CPU;
 import hardware_modules.HDD;
 import hardware_modules.RAM;
-import memory_management.MemoryManager;
 import memory_management.Partition;
-import process.ProcessScheduler;
 
 // shell poziva kernelove funkcije
 // shell: cd ls ps mkdir run mem exit rm block unblock

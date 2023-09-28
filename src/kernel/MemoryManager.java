@@ -1,10 +1,12 @@
-package memory_management;
+package kernel;
 
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import file_system.FileSystem;
 import hardware_modules.HDD;
 import hardware_modules.RAM;
+import memory_management.Partition;
+import memory_management.RamManager;
 import shell.Shell;
 
 public class MemoryManager {
