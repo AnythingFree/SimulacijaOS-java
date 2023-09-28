@@ -30,6 +30,8 @@ public class GUI extends Application {
 	private OutputStream outputStream;
 	private int length1 = 0;
 
+	private static TextArea outputArea;
+
 	private static Shell shell;
 
 	public static void clear() {
@@ -46,16 +48,102 @@ public class GUI extends Application {
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
+		primaryStage.setTitle("CLI");
+
+
 		input.connect(output);
 		textToShow = "";
 
-		top = new TextArea();
-		top.setPrefSize(900, 400);
-		top.setEditable(false);
-		top.setText(
-				"Dobrodošli u CLI! Unesite naredbu ili 'exit' za izlaz.\nUnesite 'help' ukoliko zelite listu naredbi.\n");
+		// 	Input area
+		TextField inputField = new TextField();
+        inputField.setPrefWidth(600);
 
-		bottom = new TextField();
+		// Output area
+        outputArea = new TextArea();
+        outputArea.setEditable(false);
+        outputArea.setPrefWidth(600);
+        outputArea.setPrefHeight(300);
+
+		// Submit button
+        Button submitButton = new Button("shutDown");
+        submitButton.getStyleClass().add("submit-button");
+        submitButton.setOnAction(e -> {
+			try {
+
+				/*byte array[] = inputField.getText().getBytes();
+				output.write(array);
+				length1 = array.length;
+
+				readCommand(input, length1);
+				System.out.println(inputField.getText());
+				String s = shell.processCommand(inputField.getText());
+
+				//textToShow = textToShow + ">>>" + inputField.getText() + "\n" + ">>>" + s + "\n";
+				outputArea.appendText(textToShow + ">>>" + inputField.getText() + "\n" + ">>>" + s + "\n");
+		
+
+				inputField.clear();
+				textToShow = "";*/
+
+
+				byte array[] = inputField.getText().getBytes();
+				output.write(array);
+				length1 = array.length;
+		
+				// Ako je ovo važno za vaš kod, sada možete čitati komandu iz inputField-a
+				String komanda = inputField.getText();
+				
+				// Procesuirajte komandu koristeći shell objekt
+				String s = shell.processCommand(komanda);
+		
+				outputArea.appendText(">>>" + inputField.getText() + "\n" + ">>>" + s + "\n");
+		
+				System.out.println("Izvrseno");
+				inputField.clear();
+
+			} catch (IOException e2) {
+				e2.printStackTrace();
+			}
+		});
+
+        // Clear button
+        Button clearButton = new Button("clearScreen");
+        clearButton.getStyleClass().add("clear-button");
+        clearButton.setOnAction(e -> {
+			outputArea.clear();
+		});
+
+		// Exit button
+		Button exitButton = new Button("exit");
+		exitButton.getStyleClass().add("exit-button");
+		exitButton.setOnAction(e -> {
+			System.exit(0);
+		});
+
+		// HBox for buttons
+		HBox buttonBox = new HBox(10);
+		buttonBox.setAlignment(Pos.CENTER);
+		buttonBox.getChildren().addAll(submitButton, clearButton, exitButton);
+
+		// VBox for input area, output area and buttons
+		VBox vbox = new VBox(10);
+        vbox.setPadding(new Insets(10));
+        vbox.setStyle("-fx-background-color: #ADD8E6;"); // Set background color
+        vbox.getChildren().addAll(inputField, outputArea, buttonBox);
+
+        Scene scene = new Scene(vbox, 620, 400);
+        scene.getStylesheets().add(getClass().getResource("styles.css").toExternalForm()); // Load CSS
+
+        primaryStage.setScene(scene);
+        primaryStage.show();
+
+        submitButton.setDefaultButton(true);
+		inputField.requestFocus();
+
+
+
+		
+		/*bottom = new TextField();
 		bottom.setPrefSize(900, 70);
 
 		bottom.setOnAction(e1 -> {
@@ -79,7 +167,7 @@ public class GUI extends Application {
 			} catch (IOException e2) {
 				e2.printStackTrace();
 			}
-		});
+		});*/
 
 		outputStream = new OutputStream() {
 
@@ -96,17 +184,17 @@ public class GUI extends Application {
 
 		shell.setOut(outputStream);
 
-		VBox root = new VBox(15);
+		/*VBox root = new VBox(15);
 		root.setPadding(new Insets(10, 30, 30, 30));
 		root.getChildren().addAll(top, bottom);
 		VBox.setVgrow(top, Priority.ALWAYS);
-		Scene scena = new Scene(root, 1200, 650);
+		Scene scena = new Scene(root, 1200, 650);*/
 
-		scena.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
+		scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 
-		primaryStage.setScene(scena);
+		/*primaryStage.setScene(scene);
 		primaryStage.show();
-		bottom.requestFocus();
+		bottom.requestFocus();*/
 	}
 
 	// funkcija za citanje komande
@@ -126,6 +214,7 @@ public class GUI extends Application {
 
 	public static void main(String[] args) {
 		GUI.shell = Bootloader.boot();
+		System.out.println("Shell initialized.");
 		launch(args);
 	}
 

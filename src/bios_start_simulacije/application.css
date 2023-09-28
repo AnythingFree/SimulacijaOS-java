@@ -1,21 +1,21 @@
 .root {
-    -fx-background-color: #1A1A1A; /* Tamno siva boja */
+    -fx-background-color: white; /* Tamno siva boja */
 }
 
 	
 .text-area{
 	-fx-font-family: Courier New;
 	-fx-font-size: 22;
-	-fx-text-fill: #FFFFFF;
+	-fx-text-fill: black;
 }
 
 .text-area .content{
-    -fx-background-color: #1A1A1A
+    -fx-background-color: white
 }
 
 .text-field {
 	-fx-font-family: Courier New;
 	-fx-font-size: 22;
-	-fx-text-fill: #FFFFFF;
-	-fx-background-color: #1A1A1A;
+	-fx-text-fill: black;
+	-fx-background-color: #86A8E7;
 }

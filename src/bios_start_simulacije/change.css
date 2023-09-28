@@ -1,11 +1,11 @@
 .root{
-	-fx-background-color: #1A1A1A;
+	-fx-background-color: #86A8E7;
 }
 	
 .text-area{
 	-fx-font-family: Courier New;
 	-fx-font-size: 22;
-	-fx-text-fill: #012833;
+	-fx-text-fill: black;
 }
 
 .text-area .content{
@@ -16,7 +16,7 @@
 	-fx-font-family: Courier New;
 	-fx-font-size: 22;
 	-fx-text-fill: #012833;
-	-fx-background-color: #86A8E7;
+	-fx-background-color: white;
 }
 .label {
 	-fx-font-family: Courier New;
