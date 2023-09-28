@@ -1,5 +1,8 @@
 package shell;
 
+import java.util.ArrayList;
+
+import bios_start_simulacije.GUI2;
 import kernel.Kernel;
 
 public class Shell {
@@ -29,9 +32,10 @@ public class Shell {
 					out = "Ime nije valjano. Direktorijum nije kreiran.\n";
 				break;
 			case "cd":
-				if (s.length == 2 && kernel.changeDirectory(s[1]))
+				if (s.length == 2 && kernel.changeDirectory(s[1])) {
 					out = "Izvrsena naredba: prelazi u ciljni direktorijum (naziv ili path)\n";
-				else
+					GUI2.curDirLabel.setText(kernel.getCurrentDir());
+				} else
 					out = "Nepostojeci direktorijum\n";
 				break;
 			// ========================================================================
@@ -79,14 +83,14 @@ public class Shell {
 			case "help":
 				String help = "";
 				help += "Lista naredbi:\n" +
-						"CD" + "\t\t\t\t" + "Naredba: prelazi u ciljni direktorijum.\n";
-				help += "LS" + "\t\t\t" + "Naredba: ispisuje sadržaj trenutnog direktorijuma.\n";
-				help += "MKDIR" + "\t\t\t" + "Naredba: pravi novi direktorijum u trenutnom radnom direktorijumu.\n";
-				help += "MEM" + "\t\t\t" + "Naredba: prikazuje informacije o zauzeću RAM memorije na računaru.\n";
-				help += "RUN" + "\t\t\t" + "Naredba: pokreće određeni proces ili aplikaciju.\n";
-				help += "EXIT" + "\t\t\t\t" + "Naredba: zatvara CLI, zaustavljajući izvršavanje programa.\n";
-				help += "PS" + "\t\t\t\t" + "Naredba: ispisuje popis aktivnih procesa na računaru.\n";
-				help += "RM" + "\t\t\t\t" + "Naredba:  uklanja datoteku ili direktorijum.\n";
+						"LS" + "\t\t\t\t" + "Naredba: ispisuje sadržaj trenutnog direktorijuma.\n"
+						+ "MKDIR" + "\t\t\t" + "Naredba: pravi novi direktorijum u trenutnom radnom direktorijumu.\n"
+						+ "CD" + "\t\t\t\t" + "Naredba: prelazi u ciljni direktorijum.\n"
+						+ "RM" + "\t\t\t\t" + "Naredba:  uklanja datoteku ili direktorijum.\n"
+						+ "RUN" + "\t\t\t\t" + "Naredba: pokreće određeni proces ili aplikaciju.\n"
+						+ "PS" + "\t\t\t\t" + "Naredba: ispisuje popis aktivnih procesa na računaru.\n"
+						+ "MEM" + "\t\t\t" + "Naredba: prikazuje informacije o zauzeću RAM memorije na računaru.\n"
+						+ "EXIT" + "\t\t\t\t" + "Naredba: zatvara CLI, zaustavljajući izvršavanje programa.\n";
 
 				// System.out.println(help);
 				out = help;
@@ -101,13 +105,16 @@ public class Shell {
 
 	public String getOutput() {
 		String ret = Shell.output;
-		ret += getCurrentDir() + ">>>";
 		Shell.output = "";
 		return ret;
 	}
 
 	public String getCurrentDir() {
 		return kernel.getCurrentDir();
+	}
+
+	public static void setGUIRAM(ArrayList<String> ramout) {
+		GUI2.setRAMOUT(ramout);
 	}
 
 }

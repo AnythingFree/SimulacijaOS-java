@@ -1,7 +1,10 @@
 package memory_management;
 
+import java.util.ArrayList;
+
 import _util.Formater;
 import hardware_modules.RAM;
+import shell.Shell;
 
 // code, stack, output
 public class Partition implements Comparable<Partition> {
@@ -87,22 +90,64 @@ public class Partition implements Comparable<Partition> {
     }
 
     public void setFree() {
-        // printaj na konzolu rezultat
-        System.out.println("\rRezultat: ");
-        for (int i = outputAdress; i <= endAddress; i++) {
-            int s = Formater.toInt(ram.read(i));
-            System.out.print(s + " ");
-        }
-        System.out.print("\n>>>");
+        synchronized (ram) {
+            // printaj na konzolu rezultat
+            ArrayList<String> ramout = new ArrayList<>();
+            System.out.println("\rRezultat: ");
+            for (int i = outputAdress; i <= endAddress; i++) {
+                int s = Formater.toInt(ram.read(i));
+                System.out.print(s + " ");
+                ramout.add("|A " + i + ": " + s);
+            }
 
-        // oslobodi prostor
-        for (int i = startAddress; i <= endAddress; i++) {
-            byte d = 0;
-            ram.write(i, d);
-            RamManager.MAT[i] = false;
+            Shell.setGUIRAM(ramout);
+
+            // oslobodi prostor
+            for (int i = startAddress; i <= endAddress; i++) {
+                byte d = 0;
+                ram.write(i, d);
+                RamManager.MAT[i] = false;
+            }
         }
 
         this.free = true;
+    }
+
+    public void moveToStartAdress(int newAdress) {
+        synchronized (ram) {
+            int size = endAddress - startAddress + 1;
+            byte nullByte = 0;
+            for (int i = 0; i < size; i++) {
+
+                byte data = ram.read(startAddress + i);
+                ram.write(newAdress + i, data);
+                RamManager.MAT[newAdress + i] = true;
+
+                RamManager.MAT[startAddress + i] = false;
+                ram.write(startAddress + i, nullByte);
+            }
+            this.startAddress = newAdress;
+            this.endAddress = newAdress + size - 1;
+            this.endOfCode = endAddress - sizeOfStack - sizeOfOutput;
+
+            this.startOfStack = endOfCode + 1;
+            this.endOfStack = endOfCode + sizeOfStack;
+            this.outputAdress = endOfStack + 1;
+        }
+    }
+
+    @Override
+    public String toString() {
+        return "\n    Start Address: " + startAddress +
+
+                "\n    Start of Code: " + startAddress +
+                "\n    End of Code: " + endOfCode +
+                "\n    Start of Stack: " + startOfStack +
+                "\n    End of Stack: " + endOfStack +
+                "\n    Output Address: " + outputAdress +
+
+                "\n    End Address: " + endAddress +
+                "\n    Free: " + free;
     }
 
     public boolean isFree() {
@@ -118,41 +163,6 @@ public class Partition implements Comparable<Partition> {
         } else {
             return 0;
         }
-    }
-
-    public void moveToStartAdress(int newAdress) {
-        int size = endAddress - startAddress + 1;
-        byte nullByte = 0;
-        for (int i = 0; i < size; i++) {
-
-            byte data = ram.read(startAddress + i);
-            ram.write(newAdress + i, data);
-            RamManager.MAT[newAdress + i] = true;
-
-            RamManager.MAT[startAddress + i] = false;
-            ram.write(startAddress + i, nullByte);
-        }
-        this.startAddress = newAdress;
-        this.endAddress = newAdress + size - 1;
-        this.endOfCode = endAddress - sizeOfStack - sizeOfOutput;
-
-        this.startOfStack = endOfCode + 1;
-        this.endOfStack = endOfCode + sizeOfStack;
-        this.outputAdress = endOfStack + 1;
-    }
-
-    @Override
-    public String toString() {
-        return "\n    Start Address: " + startAddress +
-
-                "\n    Start of Code: " + startAddress +
-                "\n    End of Code: " + endOfCode +
-                "\n    Start of Stack: " + startOfStack +
-                "\n    End of Stack: " + endOfStack +
-                "\n    Output Address: " + outputAdress +
-
-                "\n    End Address: " + endAddress +
-                "\n    Free: " + free;
     }
 
 }

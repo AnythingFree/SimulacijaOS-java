@@ -33,17 +33,18 @@ public class RAM {
 		return address >= 0 && address < size;
 	}
 
-	public void printMemory() {
+	public String printMemory() {
 		StringBuilder sb = new StringBuilder();
-		System.out.println("======== RAM ========");
-		System.out.print("| ");
+		sb.append("======== RAM ========\n");
+		sb.append("| ");
 		for (int i = 0; i < size; i++) {
 			if (i % 10 == 0 && i != 0) {
 				sb.append("\n| ");
 			}
 			sb.append(memory[i] + " | ");
 		}
-		System.out.println(sb.toString());
+
+		return sb.toString();
 	}
 
 	public int getRAMSize() {

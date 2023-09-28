@@ -33,8 +33,8 @@ public class Bootloader {
 		sc.close();
 	}
 
-	private static boolean checkIfPermited(String input) {
-		List<String> listOfCommands = Arrays.asList("cd", "ls", "ps", "mkdir", "run", "mem", "exit", "rm", "block", "unblock");
+	static boolean checkIfPermited(String input) {
+		List<String> listOfCommands = Arrays.asList("help", "cd", "ls", "ps", "mkdir", "run", "mem", "exit", "rm", "block", "unblock");
 		String[] s = input.split(" ");
 		if (s.length == 1 || s.length == 2) {
 			if (listOfCommands.contains(s[0]))

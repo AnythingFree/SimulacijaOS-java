@@ -8,6 +8,7 @@ import hardware_modules.CPU;
 import hardware_modules.HDD;
 import hardware_modules.RAM;
 import memory_management.Partition;
+import shell.Shell;
 
 // shell poziva kernelove funkcije
 // shell: cd ls ps mkdir run mem exit rm block unblock
@@ -33,7 +34,7 @@ public class Kernel {
 
 	public boolean listFiles() {
 		try {
-			memoryManager.listFiles();
+			Shell.output = memoryManager.listFiles();
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 			return false;
@@ -79,7 +80,7 @@ public class Kernel {
 
 	// ============= ram manager ============================
 	public void printRAM() {
-		memoryManager.printRAM();
+		Shell.output = memoryManager.printRAM();
 	}
 
 	// ============= process scheduler ============================
@@ -107,7 +108,7 @@ public class Kernel {
 	}
 
 	public void printProcesses() {
-		processScheduler.printProcesses();
+		Shell.output = processScheduler.printProcesses();
 	}
 
 	// =================== process =============================
@@ -148,9 +149,9 @@ public class Kernel {
 						processScheduler.defragSignal.wait();
 
 						System.out.println("======= Defragmentacija (start) =======");
-						memoryManager.printRAM();
+						memoryManager.printRAMAdmin();
 						memoryManager.defragmentation();
-						memoryManager.printRAM();
+						memoryManager.printRAMAdmin();
 						System.out.println("======= Defragmentacija (kraj) =======");
 
 						processScheduler.defragSignal.notify();

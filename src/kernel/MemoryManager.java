@@ -7,7 +7,6 @@ import hardware_modules.HDD;
 import hardware_modules.RAM;
 import memory_management.Partition;
 import memory_management.RamManager;
-import shell.Shell;
 
 public class MemoryManager {
 
@@ -21,8 +20,8 @@ public class MemoryManager {
         this.ramManager = new RamManager(ram);
     }
 
-    public void listFiles() {
-        Shell.output = fs.listFiles() + "\n";
+    public String listFiles() {
+        return fs.listFiles();
     }
 
     public void makeDirectory(String nameOfNewDir) throws Exception {
@@ -38,7 +37,10 @@ public class MemoryManager {
     }
 
     public String getCurrentDir() {
-        return this.fs.getCurrentDirPath();
+        String path = this.fs.getCurrentDirPath();
+        if (path.equals(""))
+            return "/";
+        return path;
     }
 
     public String getFileFromDisk(String nameOfFile) throws Exception {
@@ -51,8 +53,12 @@ public class MemoryManager {
         return this.ramManager.loadToRam(binary);
     }
 
-    public void printRAM() {
-        this.ramManager.printRAM();
+    public String printRAM() {
+        return this.ramManager.printRAM();
+    }
+
+    public void printRAMAdmin() {
+        this.ramManager.printRAMAdmin();
     }
 
     public void defragmentation() {

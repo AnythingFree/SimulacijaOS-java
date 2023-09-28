@@ -63,11 +63,16 @@ public class RamManager {
         return true;
     }
 
-    public void printRAM() {
+    public String printRAM() {
         synchronized (ram) {
-            ram.printMemory();
+            return ram.printMemory();
         }
+    }
 
+    public void printRAMAdmin() {
+        synchronized (ram) {
+            System.out.println(ram.printMemory());
+        }
     }
 
     public void defragmentation() {

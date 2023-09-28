@@ -96,7 +96,7 @@ public class ProcessScheduler {
 
 				brojac++;
 
-				System.out.println("brojac: " + brojac);
+				System.out.println("brojac do defragmentacije: " + brojac);
 				if (brojac > 2) {
 					brojac = 0;
 					synchronized (this.defragSignal) {
@@ -168,24 +168,26 @@ public class ProcessScheduler {
 		cleanupThread.start();
 	}
 
-	public void printProcesses() {
+	public String printProcesses() {
 		// go through processQueue and print all processes
+		String rez = "";
 		int broj = 0;
 		synchronized (processList) {
-			System.out.println("========Active process list:==========");
+			rez += ("========Active process list:==========\n");
 			for (ProcessMY p : processList) {
-				System.out.println("(" + broj + ") " + p);
+				rez += ("(" + broj + ") " + p + "\n");
 				broj++;
 			}
 		}
 		synchronized (doneProcesses) {
-			System.out.println("=========Done process list:===========");
+			rez += ("=========Done process list:===========\n");
 			for (ProcessMY p : doneProcesses) {
-				System.out.println("(" + broj + ") " + p);
+				rez += ("(" + broj + ") " + p + "\n");
 				broj++;
 			}
 		}
-
+		rez += ("======================================");
+		return rez;
 	}
 
 }

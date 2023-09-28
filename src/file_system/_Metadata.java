@@ -6,6 +6,7 @@ public class _Metadata {
     private String path;
     private int size;
     private Date dateCreated;
+
     private FPermission permission;
     private int indexBlockPointer;
 
@@ -30,6 +31,18 @@ public class _Metadata {
 
     public FPermission getPermision() {
         return permission;
+    }
+
+    public String getPath() {
+        return path;
+    }
+
+    public int getSize() {
+        return size;
+    }
+
+    public Date getDateCreated() {
+        return dateCreated;
     }
 
 }
