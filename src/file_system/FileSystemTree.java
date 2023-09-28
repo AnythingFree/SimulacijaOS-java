@@ -193,7 +193,10 @@ public class FileSystemTree {
         throw new Exception("Direcotry does not exist");
     }
 
-    public void createDirectoryInDir(String directoryName, TreeNode currentDirectory) {
+    public void createDirectoryInDir(String directoryName, TreeNode currentDirectory) throws Exception {
+        if (getChildByName(currentDirectory, directoryName) != null) {
+            throw new Exception("Directory already exists");
+        }
         TreeNode newNode = new TreeNode(directoryName, NodeType.DIRECTORY);
         currentDirectory.addChild(newNode);
     }

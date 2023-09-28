@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.geometry.Insets;
-import javafx.scene.Node;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
@@ -32,9 +32,10 @@ public class GUI2 extends Application {
         Button submitButton = new Button("Submit");
         inputField.setOnAction(event -> submitButton.fire());
 
-        Button shutDownButton = new Button("shutDown");
-        Button clsButton = new Button("Cls");
+        Button shutDownButton = new Button("Shut Down");
+        Button clsButton = new Button("Clear Screen");
         HBox inputBox = new HBox(10);
+        inputBox.setPadding(new Insets(10));
         inputBox.getChildren().addAll(curDirLabel, inputField, submitButton, clsButton, shutDownButton);
 
         // Text Area
@@ -45,6 +46,8 @@ public class GUI2 extends Application {
 
         // Output Boxes
         HBox outputBox = new HBox(10);
+        outputBox.setAlignment(Pos.CENTER);
+        outputBox.setPadding(new Insets(10));
         outputBox.getChildren().add(new Label("RAM: "));
         for (int i = 0; i < 10; i++) {
             outputLabels[i] = new Label("|A " + (i + 1) + ": ");
@@ -59,7 +62,11 @@ public class GUI2 extends Application {
 
             if (Bootloader.checkIfPermited(input)) {
                 textArea.appendText(shell.processCommand(input));
-                textArea.appendText(shell.getOutput() + "\n");
+                String output = shell.getOutput();
+                if (output != "") {
+                    textArea.appendText(output + "\n");
+                }
+
             } else {
                 textArea.appendText("Command not recognized.\n");
             }

@@ -29,12 +29,16 @@ public class Kernel {
 		defragmentationThread();
 	}
 
-	// SHELL KOMANDE cd ls ps mkdir run mem exit rm
+	// SHELL KOMANDE cd ls ps mkdir run mem exit rm block unblock
 	// ============= file manager ============================
 
 	public boolean listFiles() {
 		try {
-			Shell.output = memoryManager.listFiles();
+			String s = memoryManager.listFiles();
+			if (s.equals(""))
+				Shell.output = "Nema fajlova u direktorijumu.";
+			else
+				Shell.output = s;
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 			return false;
