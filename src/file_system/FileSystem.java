@@ -22,6 +22,7 @@ public class FileSystem {
 
 	private HDD hdd;
 
+	// Konstruktor za inicijalizaciju fajl sistema
 	public FileSystem(HDD hdd) {
 		this.hdd = hdd;
 		this.fileSystemTree = new FileSystemTree();
