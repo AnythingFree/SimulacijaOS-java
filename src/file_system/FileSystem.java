@@ -51,7 +51,7 @@ public class FileSystem {
 			e.printStackTrace();
 		}
 	}
-
+	// Konstruktor za kreiranje fajl sistema iz datoteke
 	public FileSystem(File file) {
 		this.fileSystemTree = new FileSystemTree();
 		this.currentDirectory = fileSystemTree.getRoot();
