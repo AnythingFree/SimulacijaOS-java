@@ -99,7 +99,7 @@ public class Partition implements Comparable<Partition> {
         synchronized (ram) {
             // printaj na konzolu rezultat
             ArrayList<String> ramout = new ArrayList<>();
-            System.out.println("\rRezultat: ");
+            System.out.println("Rezultat: ");
             for (int i = outputAdress; i <= endAddress; i++) {
                 int s = Formater.toInt(ram.read(i));
                 System.out.print(s + " ");

@@ -11,5 +11,4 @@
 .vscode/settings.json
 .vscode/launch.json
 
-# Ignore readme
-README.ME
+readme.me

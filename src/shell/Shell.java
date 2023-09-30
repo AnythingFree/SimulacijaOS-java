@@ -38,6 +38,10 @@ public class Shell {
 				} else
 					out = "Nepostojeci direktorijum\n";
 				break;
+			case "mem":
+				out = "Izvrsena naredba: prikazuje informacije o zauzeću RAM memorije na računaru.\n";
+				kernel.printRAM();
+				break;
 			// ========================================================================
 			case "rm":
 				if (s.length == 2 && kernel.deleteFileORDir(s[1]))
@@ -55,10 +59,6 @@ public class Shell {
 			case "ps":
 				out = "Izvrsena naredba: ispisuje popis aktivnih procesa na računaru.\n";
 				kernel.printProcesses();
-				break;
-			case "mem":
-				out = "Izvrsena naredba: prikazuje informacije o zauzeću RAM memorije na računaru.\n";
-				kernel.printRAM();
 				break;
 			case "defrag":
 				out = "Izvrsena naredba: defragmentacija rama.\n";

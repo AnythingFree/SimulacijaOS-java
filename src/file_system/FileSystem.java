@@ -21,6 +21,7 @@ public class FileSystem {
 	private ArrayList<Block> freeBlocks;
 
 	private HDD hdd;
+	private String rootPath = "root";
 
 	// Konstruktor za inicijalizaciju fajl sistema
 	public FileSystem(HDD hdd) {
@@ -45,7 +46,7 @@ public class FileSystem {
 		// updateFreeBlocksInHDD();
 
 		try {
-			loadASMFiles();
+			load();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -61,39 +62,61 @@ public class FileSystem {
 	private void loadASMFiles() throws Exception {
 		String path = "src//assembler//FILES"; // Replace with the correct path
 
-		File folder = new File(path);
-		File[] files = folder.listFiles();
 
-		if (files != null) {
-			createDirectoryInCurrentDir("asem_files");
-			changeCurrentDirectory("asem_files");
-			for (File file : files) {
+	private void load() throws Exception {
+		// go through all folder in the directory root
+		File rootDir = new File(this.rootPath);
+		File[] filesAndDirs = rootDir.listFiles();
 
-				String data = "";
-				if (file.isFile() && file.getName().endsWith(".asm")) {
-					try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
-						String line;
-						while ((line = reader.readLine()) != null) {
-							// Process each line of the ASM file here
-							data += line + "\n";
-						}
-
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
-				}
-				FPermission per = FPermission.READ_WRITE_EXECUTE;
-				try {
-					createFile(file.getName(), data, per);
-				} catch (Exception e) {
-					System.out.println(file.getName() + "Fajl nije kreiran:" + e.getMessage());
-				}
-				System.err.println("File " + file.getName() + " loaded.\n");
-			}
-			changeCurrentDirectory("/");
-		} else {
-			System.err.println("The specified path is not a directory.");
+		// Iterate through each file/folder
+		for (File fileOrDir : filesAndDirs) {
+			load2(fileOrDir);
 		}
+	}
+
+	private void load2(File file) throws Exception {
+		// Check if the given path exists and is a directory
+		if (file.isDirectory()) {
+
+			// cretae dir
+			createDirectoryInCurrentDir(file.getName());
+			changeCurrentDirectory(file.getName());
+
+			// Get a list of all files and directories in the directory
+			File[] filesAndDirs = file.listFiles();
+
+			// Iterate through each file/folder
+			for (File fileOrDir : filesAndDirs) {
+				load2(fileOrDir);
+			}
+			// go back to parent dir
+			changeCurrentDirectory("..");
+
+		} else {
+			// add it to dir
+			loadFile(file);
+		}
+	}
+
+	private void loadFile(File file) {
+		String data = "";
+		try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+			String line;
+			while ((line = reader.readLine()) != null) {
+				data += line + "\n";
+			}
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		FPermission per = FPermission.READ_WRITE_EXECUTE;
+		try {
+			createFile(file.getName(), data, per);
+		} catch (Exception e) {
+			System.out.println(file.getName() + "Fajl nije kreiran:" + e.getMessage());
+		}
+		System.err.println("File " + file.getName() + " loaded.\n");
 	}
 
 	// ================== READ/WRITE FUNC ========================
@@ -145,12 +168,26 @@ public class FileSystem {
 	// ================== FILE SYSTEM ТRЕЕ FUNC ========================F
 
 	public void delete(String name) throws Exception {
+
+		// trazi node i provjerava da li je u rootu
 		TreeNode node = this.fileSystemTree.getChildByName(this.currentDirectory, name);
 		if (node == null) {
-			System.out.println("hej");
 			throw new Exception("File or directory with that name does not exist.");
 		}
+
+		// brise sve fajlove ako je dir ili brise fajl ako je to fajl
 		delete2(node); // trazi i brise samo fajlove iz diska ne iz fileTree
+
+		// brise fajl iz stvarnog sistema
+		File file = new File(this.rootPath + node.getPath());
+		if (file.exists()) {
+			deleteS2(file);
+			file.delete();
+		} else {
+			throw new Exception("File or directory with that name does not exist2.");
+		}
+
+		// brise fajl iz naseg sistema tj iz fileTree
 		this.fileSystemTree.deleteNode(node); // java garbage collector ce obrisati i childove
 	}
 
@@ -166,6 +203,18 @@ public class FileSystem {
 		}
 		System.out.println("Deleted2 " + node.getName());
 
+	}
+
+	public void deleteS2(File file) {
+		File[] filesAndDirs = file.listFiles();
+		for (File fileOrDir : filesAndDirs) {
+			if (fileOrDir.isDirectory()) {
+				deleteS2(fileOrDir);
+				fileOrDir.delete();
+			} else {
+				fileOrDir.delete();
+			}
+		}
 	}
 
 	// =======================FIles=================================================
@@ -255,7 +304,13 @@ public class FileSystem {
 	}
 
 	public void createDirectoryInCurrentDir(String directoryName) throws Exception {
-		this.fileSystemTree.createDirectoryInDir(directoryName, this.currentDirectory);
+		File newDir = new File(this.rootPath + "/" + this.currentDirectory.getPath() + "/" + directoryName);
+		try {
+			newDir.mkdir();
+			this.fileSystemTree.createDirectoryInDir(directoryName, this.currentDirectory);
+		} catch (Exception e) {
+			throw new Exception("Directory with that name already exists.");
+		}
 	}
 
 	// ====================
