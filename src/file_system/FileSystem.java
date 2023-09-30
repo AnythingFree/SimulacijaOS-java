@@ -23,6 +23,7 @@ public class FileSystem {
 	private HDD hdd;
 	private String rootPath = "root";
 
+	// Konstruktor za inicijalizaciju fajl sistema
 	public FileSystem(HDD hdd) {
 		this.hdd = hdd;
 		this.fileSystemTree = new FileSystemTree();
@@ -51,7 +52,7 @@ public class FileSystem {
 			e.printStackTrace();
 		}
 	}
-
+	// Konstruktor za kreiranje fajl sistema iz datoteke
 	public FileSystem(File file) {
 		this.fileSystemTree = new FileSystemTree();
 		this.currentDirectory = fileSystemTree.getRoot();
