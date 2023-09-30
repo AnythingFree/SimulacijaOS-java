@@ -57,6 +57,7 @@ public class FileSystem {
 		this.currentDirectory = fileSystemTree.getRoot();
 	}
 	// Metoda za učitavanje asm fajlova iz direktorijuma FILES
+	// Učitava .asm fajlove i kreira fajlove u fajl sistemu
 	private void loadASMFiles() throws Exception {
 		String path = "src//assembler//FILES"; // Replace with the correct path
 
