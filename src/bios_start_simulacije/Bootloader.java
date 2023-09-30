@@ -44,7 +44,7 @@ public class Bootloader {
 	}
 
 	public static Shell boot() {
-		HDD hdd = new HDD();
+		HDD hdd = new HDD(); 
 		RAM ram = new RAM();
 		CPU cpu = new CPU(1); //Hz
 

@@ -89,7 +89,7 @@ public class CPU extends Thread {
 
 				executeInstruction(ljudskiCitljivaKomanda.get(instruction));
 			} catch (Exception e) {
-				System.out.println("\r --Greska u izvrsavanju instrukcije u CPU:\n --" + e.getMessage());
+				System.out.println(" --Greska u izvrsavanju instrukcije u CPU:\n --" + e.getMessage());
 				break;
 			}
 			programCounter++;

@@ -1,0 +1,5 @@
+PUSH 5
+PUSH 10
+DIV
+POP
+HLT

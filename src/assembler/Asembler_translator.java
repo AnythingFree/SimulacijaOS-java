@@ -87,7 +87,7 @@ public class Asembler_translator {
 				String cleanedInstruction = removeComments(instruction);
 
 				// tokenize it
-				String[] tokens = cleanedInstruction.split("\\s+"); // mozda mijenjati ovaj znak
+				String[] tokens = cleanedInstruction.toUpperCase().split("\\s+"); // mozda mijenjati ovaj znak
 				for (String token : tokens) {
 					if (!token.isEmpty())
 						cleanedInstructions.add(token);
@@ -122,7 +122,7 @@ public class Asembler_translator {
 
 	public static ArrayList<String> assemble2(ArrayList<String> instructions) throws Exception {
 
-		instructions = lexer(instructions); // DOPUSTA DA NOVI RED ZAPOCINJE SA BROJEM DA LI TO DOZVOLITI?
+		instructions = lexer(instructions); 
 		// instructions = parser(instructions); check sintax?
 
 		ArrayList<String> binaryCode = assembleInstructions(instructions);
