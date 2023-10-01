@@ -63,6 +63,7 @@ public class FileSystem {
 		String path = "src//assembler//FILES"; // Replace with the correct path
 
 	}
+	//Učitava podatke o fajlovima iz sistema
 	private void load() throws Exception {
 		// go through all folder in the directory root
 		File rootDir = new File(this.rootPath);
@@ -73,7 +74,7 @@ public class FileSystem {
 			load2(fileOrDir);
 		}
 	}
-
+	//Rekurzivno učitava fajlove i direktorijume iz datoteke
 	private void load2(File file) throws Exception {
 		// Check if the given path exists and is a directory
 		if (file.isDirectory()) {
@@ -98,6 +99,7 @@ public class FileSystem {
 		}
 	}
 
+	//Učitava sadržaj datoteke i kreira fajl u fajl sistemu
 	private void loadFile(File file) {
 		String data = "";
 		try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
@@ -124,6 +126,7 @@ public class FileSystem {
 	// ===================== PRIVATE =============================
 
 	// split it into blocks sizes and write to blocks
+	//Šalje zahtev za čitanje ili pisanje podataka na hard disk
 	private void sendRequests(ArrayList<Block> blocks, byte[][] data) {
 
 		if (data == null) {
@@ -138,11 +141,12 @@ public class FileSystem {
 
 	}
 
+	// Piše podatke u blokove
 	private void writeData(ArrayList<Block> blocksAllocated, byte[][] data) {
 		sendRequests(blocksAllocated, data);
 		this.hdd.write();
 	}
-
+	//Čita podatke iz blokova
 	private byte[] readData(ArrayList<Block> blocks) {
 		sendRequests(blocks, null);
 
@@ -190,7 +194,7 @@ public class FileSystem {
 		// brise fajl iz naseg sistema tj iz fileTree
 		this.fileSystemTree.deleteNode(node); // java garbage collector ce obrisati i childove
 	}
-
+	// Rekurzivno briše fajlove i direktorijume iz fajl sistema
 	private void delete2(TreeNode node) throws Exception {
 		System.out.println("Deleting " + node.getName());
 		if (node.getType() == NodeType.DIRECTORY) {
@@ -204,7 +208,7 @@ public class FileSystem {
 		System.out.println("Deleted2 " + node.getName());
 
 	}
-
+	//Rekurzivno briše fajlove iz stvarnog sistema
 	public void deleteS2(File file) {
 		File[] filesAndDirs = file.listFiles();
 		for (File fileOrDir : filesAndDirs) {
@@ -349,6 +353,7 @@ public class FileSystem {
 		// writeData(b, dataToWrite);
 	}
 
+	//Razdvaja podatke u blokove
 	private byte[][] getDataInBlockSizes(byte[] data) {
 
 		byte[][] dataInBlockSizes;
@@ -375,6 +380,7 @@ public class FileSystem {
 		return dataInBlockSizes;
 	}
 
+	//Alocira blokove za čuvanje podataka
 	private ArrayList<Block> allocateBloks(int length) throws Exception {
 
 		ArrayList<Block> blocksAllocated = new ArrayList<Block>();

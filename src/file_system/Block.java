@@ -7,8 +7,8 @@ import hardware_modules.HDD;
 public class Block {
     final int id;
     final ArrayList<int[]> pointers = new ArrayList<int[]>();
-    boolean occupied;
-    private int ocupSize = 0;
+    boolean occupied; //da li je blok zauzet ili ne
+    private int ocupSize = 0; //velicina zauzetosti bloka u bajtovima
 
     public Block(int id, int trackN, int sectorN) {
         this.id = id;
@@ -45,6 +45,9 @@ public class Block {
     }
 
     // ovo moze sa manje koda
+    //Šalje zahtev za čitanje ili pisanje podataka na hard disk 
+    // Ako se šalju podaci, postavlja zauzetu veličinu i označava blok kao zauzet. 
+    //u zavisnosti od veličine podataka, šalje ih u sektore na disku, presecajući ih u slučaju potrebe
     public void sendRequest(byte[] bs, HDD hdd) {
         if (bs != null) {
             setOcuSize(bs.length);

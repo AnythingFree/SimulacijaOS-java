@@ -42,6 +42,8 @@ public class RamManager {
             return partition;
         }
     }
+    //Metoda koja pronalazi adresu u RAM-u na kojoj se može smestiti 
+	//particija određene veličine. Vraća -1 ako nema dovoljno slobodnog prostora
 
     private int getAdress(int size) {
         for (int i = 0; i < MAT.length; i++) {
@@ -53,7 +55,8 @@ public class RamManager {
         }
         return -1;
     }
-
+   // Proverava da li su naredne `size` adresa u RAM-u slobodne 
+   // počevši od adrese `i`.
     private boolean checkIfFree(int i, int size) {
         for (int j = i; j < i + size; j++) {
             if (MAT[j] == true) {
@@ -74,7 +77,7 @@ public class RamManager {
             System.out.println(ram.printMemory());
         }
     }
-
+//premještanje particija kako bi se stvorio kontinuiran prostor u RAM-u
     public void defragmentation() {
         synchronized (ram) {
             ArrayList<Partition> freePartitions = new ArrayList<>();
