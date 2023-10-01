@@ -62,7 +62,7 @@ public class FileSystem {
 	private void loadASMFiles() throws Exception {
 		String path = "src//assembler//FILES"; // Replace with the correct path
 
-
+	}
 	private void load() throws Exception {
 		// go through all folder in the directory root
 		File rootDir = new File(this.rootPath);
