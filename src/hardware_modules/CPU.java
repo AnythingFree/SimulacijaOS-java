@@ -19,6 +19,7 @@ public class CPU extends Thread {
 	private int endOfCode;
 
 	private int programCounter;
+	private String instructionReg;
 	private int stackPointer;
 
 	private boolean hlt = false;
@@ -77,7 +78,7 @@ public class CPU extends Thread {
 		int numberOfinst = 0;
 		while (this.process.getState() == _ProcessState.RUNNING && !hlt && (programCounter < (this.endOfCode + 1))) {
 
-			String instruction = Formater.toBinaryString(readFromMemory(programCounter));
+			this.instructionReg = Formater.toBinaryString(readFromMemory(programCounter));
 			try {
 
 				// sleep for enough amount to simulate speed
@@ -87,7 +88,7 @@ public class CPU extends Thread {
 				}
 				numberOfinst++;
 
-				executeInstruction(ljudskiCitljivaKomanda.get(instruction));
+				executeInstruction(ljudskiCitljivaKomanda.get(this.instructionReg));
 			} catch (Exception e) {
 				System.out.println(" --Greska u izvrsavanju instrukcije u CPU:\n --" + e.getMessage());
 				break;
